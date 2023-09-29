@@ -6,14 +6,17 @@ import { RouterProvider } from "react-router-dom";
 import ProjectRouter from "./components/router/ProjectRouter";
 import { useState } from "react";
 import PublicRouter from "./components/router/PublicRouter";
+// import axios from "axios";
 
 function App() {
   const [auth, setAuth] = useState(false);
+ 
+
   return (
     <>
       {auth ? (
         <RouterProvider router={ProjectRouter} />
-      ) : (
+      ) : ( 
         <RouterProvider router={PublicRouter} />
       )}
     </>

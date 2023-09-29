@@ -65,16 +65,16 @@ const login = async (req, res) => {
 
     res.header("Authorization", `Bearer ${token}`);
     return res.status(200).json({
-      status: 200,
+      status: true,
       token,
       userdata: data,
       message: "Login successfull",
     });
   } catch (error) {
-    console.log("error=======>", error);
+    console.log(error);
     return res
       .status(500)
-      .json({ status: "error", data: error, message: "Login fail" });
+      .json({ status: false, data: error, message: "Login fail" });
   }
 };
 
@@ -99,7 +99,7 @@ const addUser = async (req, res) => {
     const mailResp = await sendMail(mailData);
 
     return res.status(201).json({
-      status: 200,
+      status: true,
       data: response,
       mailData: mailData,
       message: "User successfully created!",
@@ -108,7 +108,7 @@ const addUser = async (req, res) => {
     console.log(error.message);
     return res
       .status(500)
-      .json({ status: 500, message: "Something went wrong" });
+      .json({ status: false, message: "Something went wrong" });
   }
 };
 

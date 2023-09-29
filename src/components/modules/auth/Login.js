@@ -43,7 +43,12 @@ function Login() {
               </label>
 
               <div className="d-grid mt-4">
-                <button className={"btn btn-outline-warning"}>Login</button>
+                <button
+                  className={"btn btn-outline-warning"}
+                  // onClick={callback(input)}
+                >
+                  Login
+                </button>
               </div>
             </div>
           </div>

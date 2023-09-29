@@ -1,7 +1,7 @@
 const { Model, DataTypes } = require("sequelize");
 const sequelize = require("../config/dbConfig");
 
-const package = require("./package");
+// const package = require("./package");
 
 class User extends Model {}
 
@@ -32,41 +32,41 @@ User.init(
       allowNull: true,
       require: true,
     },
-    catagory: {
-      type: DataTypes.INTEGER,
-    },
-    status: {
-      type: DataTypes.INTEGER,
-      defaultValue: 0,
-    },
-    address: {
-      type: DataTypes.STRING,
-    },
-    zip: {
-      type: DataTypes.STRING,
-    },
-    isPremium: {
-      type: DataTypes.BOOLEAN,
-    },
-    subscriptionType: {
-      type: DataTypes.INTEGER,
-    },
-    createdTime: {
-      type: DataTypes.DATE,
-    },
-    streamKey: {
-      type: DataTypes.STRING,
-    },
-    userType: {
-      type: DataTypes.INTEGER,
-    },
-    fpToken: {
-      type: DataTypes.STRING,
-    },
+    // address: {
+    //   type: DataTypes.STRING,
+    // },
+    // zip: {
+    //   type: DataTypes.STRING,
+    // },
+    // subscriptionType: {
+    //   type: DataTypes.STRING,
+    // },
+    // isPremium: {
+    //   type: DataTypes.BOOLEAN,
+    // },
+    // catagory: {
+    //   type: DataTypes.INTEGER,
+    // },
+    // status: {
+    //   type: DataTypes.INTEGER,
+    //   defaultValue: 0,
+    // },
+    // createdTime: {
+    //   type: DataTypes.DATE,
+    // },
+    // streamKey: {
+    //   type: DataTypes.STRING,
+    // },
+    // userType: {
+    //   type: DataTypes.INTEGER,
+    // },
+    // fpToken: {
+    //   type: DataTypes.STRING,
+    // },
   },
   {
     tableName: "users",
-    timestamps: false,
+    // timestamps: false,
     sequelize,
   }
 );
@@ -75,9 +75,9 @@ User.init(
   await User.sync({force:false});
 })();
 
-User.hasOne(package, {
-  foreignKey: "subscriptionType",
-  sourceKey: "subscriptionType",
-});
+// User.hasOne(package, {
+//   foreignKey: "subscriptionType",
+//   sourceKey: "subscriptionType",
+// });
 
 module.exports = User;
