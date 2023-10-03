@@ -1,6 +1,6 @@
 const User = require("../models/Users");
 const Category = require("../models/category");
-const Packages = require("../models/package");
+// const Packages = require("../models/package");
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
 const {
@@ -30,9 +30,8 @@ const login = async (req, res) => {
     if (!userDetails) {
       return res
         .status(401)
-        .json({ status: "error", message: "email incorrect" });
+        .json({ status: 'error', message: "email incorrect" });
     }
-    // userDetails = userDetails.dataValues;
 
     const isPassMatch = await checkPassword(
       password.trim(),
@@ -42,7 +41,7 @@ const login = async (req, res) => {
     if (!isPassMatch) {
       return res
         .status(401)
-        .json({ status: "error", message: "Incorrect password, try again" });
+        .json({ status: 'error', message: "Incorrect password, try again" });
     }
 
     const token = jwt.sign(
@@ -65,13 +64,13 @@ const login = async (req, res) => {
 
     res.header("Authorization", `Bearer ${token}`);
     return res.status(200).json({
-      status: true,
+      status: 'success',
       token,
       userdata: data,
       message: "Login successfull",
     });
   } catch (error) {
-    console.log(error);
+    console.log(error.message);
     return res
       .status(500)
       .json({ status: false, data: error, message: "Login fail" });
@@ -83,6 +82,25 @@ const addUser = async (req, res) => {
     const reqBody = req.body;
     const currentDate = moment().tz("Asia/Kolkata").format("YYYY-MM-DD, HH:mm");
 
+    const findEmail = await User.findOne({ where: { email: reqBody.email } });
+
+    const findPhoneNumber = await User.findOne({
+      where: { phoneNumber: reqBody.phoneNumber },
+    });
+
+    if (findEmail) {
+      return res
+        .status(409)
+        .json({ status: "email conflict", msg: "Email is already present!" });
+    }
+
+    if (findPhoneNumber) {
+      return res.status(409).json({
+        status: "phone conflict",
+        msg: "Phone Number is already present!",
+      });
+    }
+
     reqBody.password = await encryptPassword(reqBody.password);
 
     const userDetails = await User.create({
@@ -90,6 +108,12 @@ const addUser = async (req, res) => {
       createdTime: currentDate,
     });
     const response = await userDetails.save();
+
+    const token = jwt.sign(
+      { id: userDetails.id, userType: userDetails.userType },
+      secretKey,
+      { expiresIn }
+    );
 
     const mailData = {
       respMail: reqBody.email,
@@ -102,6 +126,7 @@ const addUser = async (req, res) => {
       status: true,
       data: response,
       mailData: mailData,
+      token: token,
       message: "User successfully created!",
     });
   } catch (error) {

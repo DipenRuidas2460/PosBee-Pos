@@ -9,7 +9,7 @@ function SideBar() {
       >
         <div className="sb-sidenav-menu">
           <div className="nav">
-            <a className="nav-link" href="/">
+            <a className="nav-link" href="/master">
               <div className="sb-nav-link-icon">
                 <i className="fa fa-dashboard"></i>
               </div>
@@ -18,7 +18,7 @@ function SideBar() {
 
             <a
               className="nav-link collapsed"
-              href="/"
+              href="/master"
               data-bs-toggle="collapse"
               data-bs-target="#collapseLayouts4"
               aria-expanded="false"
@@ -39,19 +39,19 @@ function SideBar() {
               data-bs-parent="#sidenavAccordion"
             >
               <nav className="sb-sidenav-menu-nested nav">
-                <a className="nav-link" href="/">
+                <a className="nav-link" href="/master">
                   <div className="sb-nav-link-icon">
                     <i className="fa-regular fa-user"></i>
                   </div>
                   Users
                 </a>
-                <a className="nav-link" href="/">
+                <a className="nav-link" href="/master">
                   <div className="sb-nav-link-icon">
                     <i className="fa-solid fa-briefcase"></i>
                   </div>
                   Roles
                 </a>
-                <a className="nav-link" href="/">
+                <a className="nav-link" href="/master">
                   <div className="sb-nav-link-icon">
                     <i className="fa-solid fa-handshake"></i>
                   </div>
@@ -62,7 +62,7 @@ function SideBar() {
 
             <a
               className="nav-link collapsed"
-              href="/"
+              href="/master"
               data-bs-toggle="collapse"
               data-bs-target="#collapseLayouts5"
               aria-expanded="false"
@@ -84,25 +84,25 @@ function SideBar() {
               data-bs-parent="#sidenavAccordion"
             >
               <nav className="sb-sidenav-menu-nested nav">
-                <a className="nav-link" href="/">
+                <a className="nav-link" href="/master">
                   <div className="sb-nav-link-icon">
                     <i className="fa-solid fa-star"></i>
                   </div>
                   Suppliers
                 </a>
-                <a className="nav-link" href="/">
+                <a className="nav-link" href="/master">
                   <div className="sb-nav-link-icon">
                     <i className="fa-solid fa-star"></i>
                   </div>
                   Customers
                 </a>
-                <a className="nav-link" href="/">
+                <a className="nav-link" href="/master">
                   <div className="sb-nav-link-icon">
                     <i className="fa-solid fa-users"></i>
                   </div>
                   Customer Group
                 </a>
-                <a className="nav-link" href="/">
+                <a className="nav-link" href="/master">
                   <div className="sb-nav-link-icon">
                     <i className="fa-solid fa-download"></i>
                   </div>
@@ -113,7 +113,7 @@ function SideBar() {
 
             <a
               className="nav-link collapsed"
-              href="/"
+              href="/master"
               data-bs-toggle="collapse"
               data-bs-target="#collapseLayouts6"
               aria-expanded="false"
@@ -135,43 +135,43 @@ function SideBar() {
               data-bs-parent="#sidenavAccordion"
             >
               <nav className="sb-sidenav-menu-nested nav">
-                <a className="nav-link" href="/">
+                <a className="nav-link" href="/master">
                   <div className="sb-nav-link-icon">
                     <i className="fa-solid fa-list"></i>
                   </div>
                   List Products
                 </a>
-                <a className="nav-link" href="/">
+                <a className="nav-link" href="/master">
                   <div className="sb-nav-link-icon">
                     <i className="fa-solid fa-circle-plus"></i>
                   </div>
                   Add Product
                 </a>
-                <a className="nav-link" href="/">
+                <a className="nav-link" href="/master">
                   <div className="sb-nav-link-icon">
                     <i className="fa-solid fa-barcode"></i>
                   </div>
                   Print Labels
                 </a>
-                <a className="nav-link" href="/">
+                <a className="nav-link" href="/master">
                   <div className="sb-nav-link-icon">
                     <i className="fa-regular fa-circle"></i>
                   </div>
                   Variations
                 </a>
-                <a className="nav-link" href="/">
+                <a className="nav-link" href="/master">
                   <div className="sb-nav-link-icon">
                     <i className="fa-solid fa-download"></i>
                   </div>
                   Import Products
                 </a>
-                <a className="nav-link" href="/">
+                <a className="nav-link" href="/master">
                   <div className="sb-nav-link-icon">
                     <i className="fa-solid fa-download"></i>
                   </div>
                   Import Opening Stock
                 </a>
-                <a className="nav-link" href="/">
+                <a className="nav-link" href="/master">
                   <div className="sb-nav-link-icon">
                     <i className="fa-regular fa-circle"></i>
                   </div>
@@ -182,7 +182,7 @@ function SideBar() {
 
             <a
               className="nav-link collapsed"
-              href="/"
+              href="/master"
               data-bs-toggle="collapse"
               data-bs-target="#collapseLayouts7"
               aria-expanded="false"
@@ -204,19 +204,19 @@ function SideBar() {
               data-bs-parent="#sidenavAccordion"
             >
               <nav className="sb-sidenav-menu-nested nav">
-                <a className="nav-link" href="/">
+                <a className="nav-link" href="/master">
                   <div className="sb-nav-link-icon">
                     <i className="fa-solid fa-list"></i>
                   </div>
                   List Perchases
                 </a>
-                <a className="nav-link" href="/">
+                <a className="nav-link" href="/master">
                   <div className="sb-nav-link-icon">
                     <i className="fa-solid fa-circle-plus"></i>
                   </div>
                   Add Perchases
                 </a>
-                <a className="nav-link" href="/">
+                <a className="nav-link" href="/master">
                   <div className="sb-nav-link-icon">
                     <i className="fa-solid fa-rotate-left"></i>
                   </div>
@@ -227,7 +227,7 @@ function SideBar() {
 
             <a
               className="nav-link collapsed"
-              href="/"
+              href="/master"
               data-bs-toggle="collapse"
               data-bs-target="#collapseLayouts8"
               aria-expanded="false"
@@ -249,43 +249,43 @@ function SideBar() {
               data-bs-parent="#sidenavAccordion"
             >
               <nav className="sb-sidenav-menu-nested nav">
-                <a className="nav-link" href="/">
+                <a className="nav-link" href="/master">
                   <div className="sb-nav-link-icon">
                     <i className="fa-solid fa-list"></i>
                   </div>
                   All Sales
                 </a>
-                <a className="nav-link" href="/">
+                <a className="nav-link" href="/master">
                   <div className="sb-nav-link-icon">
                     <i className="fa-solid fa-circle-plus"></i>
                   </div>
                   Add Sale
                 </a>
-                <a className="nav-link" href="/">
+                <a className="nav-link" href="/master">
                   <div className="sb-nav-link-icon">
                     <i className="fa-solid fa-list"></i>
                   </div>
                   List POS
                 </a>
-                <a className="nav-link" href="/">
+                <a className="nav-link" href="/master">
                   <div className="sb-nav-link-icon">
                     <i className="fa-solid fa-circle-plus"></i>
                   </div>
                   POS
                 </a>
-                <a className="nav-link" href="/">
+                <a className="nav-link" href="/master">
                   <div className="sb-nav-link-icon">
                     <i className="fa-solid fa-square-pen"></i>
                   </div>
                   List Drafts
                 </a>
-                <a className="nav-link" href="/">
+                <a className="nav-link" href="/master">
                   <div className="sb-nav-link-icon">
                     <i className="fa-solid fa-square-pen"></i>
                   </div>
                   List quotations
                 </a>
-                <a className="nav-link" href="/">
+                <a className="nav-link" href="/master">
                   <div className="sb-nav-link-icon">
                     <i className="fa-solid fa-rotate-left"></i>
                   </div>
@@ -296,7 +296,7 @@ function SideBar() {
 
             <a
               className="nav-link collapsed"
-              href="/"
+              href="/master"
               data-bs-toggle="collapse"
               data-bs-target="#collapseLayouts9"
               aria-expanded="false"
@@ -318,13 +318,13 @@ function SideBar() {
               data-bs-parent="#sidenavAccordion"
             >
               <nav className="sb-sidenav-menu-nested nav">
-                <a className="nav-link" href="/">
+                <a className="nav-link" href="/master">
                   <div className="sb-nav-link-icon">
                     <i className="fa-solid fa-list"></i>
                   </div>
                   List Stock Transfers
                 </a>
-                <a className="nav-link" href="/">
+                <a className="nav-link" href="/master">
                   <div className="sb-nav-link-icon">
                     <i className="fa-solid fa-circle-plus"></i>
                   </div>
@@ -335,7 +335,7 @@ function SideBar() {
 
             <a
               className="nav-link collapsed"
-              href="/"
+              href="/master"
               data-bs-toggle="collapse"
               data-bs-target="#collapseLayouts10"
               aria-expanded="false"
@@ -357,13 +357,13 @@ function SideBar() {
               data-bs-parent="#sidenavAccordion"
             >
               <nav className="sb-sidenav-menu-nested nav">
-                <a className="nav-link" href="/">
+                <a className="nav-link" href="/master">
                   <div className="sb-nav-link-icon">
                     <i className="fa-solid fa-list"></i>
                   </div>
                   List Stock Adjustments
                 </a>
-                <a className="nav-link" href="/">
+                <a className="nav-link" href="/master">
                   <div className="sb-nav-link-icon">
                     <i className="fa-solid fa-circle-plus"></i>
                   </div>
@@ -374,7 +374,7 @@ function SideBar() {
 
             <a
               className="nav-link collapsed"
-              href="/"
+              href="/master"
               data-bs-toggle="collapse"
               data-bs-target="#collapseLayouts1"
               aria-expanded="false"
@@ -396,19 +396,19 @@ function SideBar() {
               data-bs-parent="#sidenavAccordion"
             >
               <nav className="sb-sidenav-menu-nested nav">
-                <a className="nav-link" href="/">
+                <a className="nav-link" href="/master">
                   <div className="sb-nav-link-icon">
                     <i className="fa-solid fa-list"></i>
                   </div>
                   List Expenses
                 </a>
-                <a className="nav-link" href="/">
+                <a className="nav-link" href="/master">
                   <div className="sb-nav-link-icon">
                     <i className="fa-solid fa-circle-plus"></i>
                   </div>
                   Add Expenses
                 </a>
-                <a className="nav-link" href="/">
+                <a className="nav-link" href="/master">
                   <div className="sb-nav-link-icon">
                     <i className="fa-regular fa-circle"></i>
                   </div>
@@ -419,7 +419,7 @@ function SideBar() {
 
             <a
               className="nav-link collapsed"
-              href="/"
+              href="/master"
               data-bs-toggle="collapse"
               data-bs-target="#collapsePages"
               aria-expanded="false"
@@ -441,109 +441,109 @@ function SideBar() {
               data-bs-parent="#sidenavAccordion"
             >
               <nav className="sb-sidenav-menu-nested nav">
-                <a className="nav-link" href="/">
+                <a className="nav-link" href="/master">
                   <div className="sb-nav-link-icon">
                     <i className="fa-regular fa-money-bill-1"></i>
                   </div>
                   Profit / Loss Report
                 </a>
-                <a className="nav-link" href="/">
+                <a className="nav-link" href="/master">
                   <div className="sb-nav-link-icon">
                     <i className="fa-solid fa-arrow-right-arrow-left"></i>
                   </div>
                   Purchase & Sale
                 </a>
-                <a className="nav-link" href="/">
+                <a className="nav-link" href="/master">
                   <div className="sb-nav-link-icon">
                     <i className="fa-brands fa-tumblr"></i>
                   </div>
                   Tax Report
                 </a>
-                <a className="nav-link" href="/">
+                <a className="nav-link" href="/master">
                   <div className="sb-nav-link-icon">
                     <i className="fa-solid fa-address-book"></i>
                   </div>
                   Supplier & Customer Report
                 </a>
-                <a className="nav-link" href="/">
+                <a className="nav-link" href="/master">
                   <div className="sb-nav-link-icon">
                     <i className="fa-solid fa-users"></i>
                   </div>
                   Customer Groups Report
                 </a>
-                <a className="nav-link" href="/">
+                <a className="nav-link" href="/master">
                   <div className="sb-nav-link-icon">
                     <i className="fa-regular fa-hourglass-half"></i>
                   </div>
                   Stock Report
                 </a>
-                <a className="nav-link" href="/">
+                <a className="nav-link" href="/master">
                   <div className="sb-nav-link-icon">
                     <i className="fa-regular fa-hourglass-half"></i>
                   </div>
                   Lot Report
                 </a>
-                <a className="nav-link" href="/">
+                <a className="nav-link" href="/master">
                   <div className="sb-nav-link-icon">
                     <i className="fa-solid fa-chart-line"></i>
                   </div>
                   Trending Products
                 </a>
-                <a className="nav-link" href="/">
+                <a className="nav-link" href="/master">
                   <div className="sb-nav-link-icon">
                     <i className="fa-solid fa-sliders"></i>
                   </div>
                   Stock Adjustment Report
                 </a>
-                <a className="nav-link" href="/">
+                <a className="nav-link" href="/master">
                   <div className="sb-nav-link-icon">
                     <i className="fa-solid fa-circle-arrow-down"></i>
                   </div>
                   Product Purchase Report
                 </a>
-                <a className="nav-link" href="/">
+                <a className="nav-link" href="/master">
                   <div className="sb-nav-link-icon">
                     <i className="fa-solid fa-circle-arrow-up"></i>
                   </div>
                   Product Sell Report
                 </a>
-                <a className="nav-link" href="/">
+                <a className="nav-link" href="/master">
                   <div className="sb-nav-link-icon">
                     <i className="fa-regular fa-money-bill-1"></i>
                   </div>
                   Purchase Payment Report
                 </a>
-                <a className="nav-link" href="/">
+                <a className="nav-link" href="/master">
                   <div className="sb-nav-link-icon">
                     <i className="fa-regular fa-money-bill-1"></i>
                   </div>
                   Sell Payment Report
                 </a>
-                <a className="nav-link" href="/">
+                <a className="nav-link" href="/master">
                   <div className="sb-nav-link-icon">
                     <i className="fa-solid fa-magnifying-glass-minus"></i>
                   </div>
                   Expense Report
                 </a>
-                <a className="nav-link" href="/">
+                <a className="nav-link" href="/master">
                   <div className="sb-nav-link-icon">
                     <i className="fa-solid fa-briefcase"></i>
                   </div>
                   Register Report
                 </a>
-                <a className="nav-link" href="/">
+                <a className="nav-link" href="/master">
                   <div className="sb-nav-link-icon">
                     <i className="fa-solid fa-user"></i>
                   </div>
                   Sales Representative Report
                 </a>
-                <a className="nav-link" href="/">
+                <a className="nav-link" href="/master">
                   <div className="sb-nav-link-icon">
                     <i className="fa-solid fa-table-cells"></i>
                   </div>
                   Table Report
                 </a>
-                <a className="nav-link" href="/">
+                <a className="nav-link" href="/master">
                   <div className="sb-nav-link-icon">
                     <i className="fa-solid fa-user-secret"></i>
                   </div>
@@ -589,7 +589,7 @@ function SideBar() {
 
             <a
               className="nav-link collapsed"
-              href="/"
+              href="/master"
               data-bs-toggle="collapse"
               data-bs-target="#collapseLayouts3"
               aria-expanded="false"
@@ -611,67 +611,67 @@ function SideBar() {
               data-bs-parent="#sidenavAccordion"
             >
               <nav className="sb-sidenav-menu-nested nav">
-                <a className="nav-link" href="/">
+                <a className="nav-link" href="/master">
                   <div className="sb-nav-link-icon">
                     <i className="fa-solid fa-gears"></i>
                   </div>
                   Business Settings
                 </a>
-                <a className="nav-link" href="/">
+                <a className="nav-link" href="/master">
                   <div className="sb-nav-link-icon">
                     <i className="fa-solid fa-location-dot"></i>
                   </div>
                   Business Locations
                 </a>
-                <a className="nav-link" href="/">
+                <a className="nav-link" href="/master">
                   <div className="sb-nav-link-icon">
                     <i className="fa-solid fa-file"></i>
                   </div>
                   Invoice Settings
                 </a>
-                <a className="nav-link" href="/">
+                <a className="nav-link" href="/master">
                   <div className="sb-nav-link-icon">
                     <i className="fa-solid fa-barcode"></i>
                   </div>
                   Barcode Settings
                 </a>
-                <a className="nav-link" href="/">
+                <a className="nav-link" href="/master">
                   <div className="sb-nav-link-icon">
                     <i className="fa-solid fa-share-nodes"></i>
                   </div>
                   Receipt Printers
                 </a>
-                <a className="nav-link" href="/">
+                <a className="nav-link" href="/master">
                   <div className="sb-nav-link-icon">
                     <i className="fa-regular fa-gem"></i>
                   </div>
                   Brands
                 </a>
-                <a className="nav-link" href="/">
+                <a className="nav-link" href="/master">
                   <div className="sb-nav-link-icon">
                     <i className="fa-solid fa-bolt"></i>
                   </div>
                   Tax Rates
                 </a>
-                <a className="nav-link" href="/">
+                <a className="nav-link" href="/master">
                   <div className="sb-nav-link-icon">
                     <i className="fa-solid fa-scale-balanced"></i>
                   </div>
                   Units
                 </a>
-                <a className="nav-link" href="/">
+                <a className="nav-link" href="/master">
                   <div className="sb-nav-link-icon">
                     <i className="fa-solid fa-tags"></i>
                   </div>
                   Categories
                 </a>
-                <a className="nav-link" href="/">
+                <a className="nav-link" href="/master">
                   <div className="sb-nav-link-icon">
-                  <i className="fa-solid fa-table-cells"></i>
+                    <i className="fa-solid fa-table-cells"></i>
                   </div>
                   Tables
                 </a>
-                <a className="nav-link" href="/">
+                <a className="nav-link" href="/master">
                   <div className="sb-nav-link-icon">
                     <i className="fa-brands fa-delicious"></i>
                   </div>

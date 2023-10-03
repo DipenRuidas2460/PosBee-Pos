@@ -7,9 +7,16 @@ function BreadCrumb({ title }) {
       <Helmet>
         <title>{title} | Balaji Restaurant</title>
       </Helmet>
-      <h3 className="mt-4">Dashboard</h3>
+      <h3 className="mt-4" style={{ paddingLeft: "2%" }}>
+        Dashboard
+      </h3>
       <ol className="breadcrumb mb-4">
-        <li className="breadcrumb-item text-theme-light">{title}</li>
+        <li
+          className="breadcrumb-item text-theme-light mt-2"
+          style={{ paddingLeft: "3%" }}
+        >
+          {title}
+        </li>
       </ol>
     </>
   );

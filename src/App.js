@@ -1,24 +1,56 @@
 import "./assets/css/styles.css";
-// import 'bootstrap/dist/css/bootstrap.min.css'
-// import 'bootstrap/dist/js/bootstrap.bundle.min.js'
 import "./assets/css/style.scss";
-import { RouterProvider } from "react-router-dom";
-import ProjectRouter from "./components/router/ProjectRouter";
+// import { RouterProvider } from "react-router-dom";
+// import ProjectRouter from "./components/router/ProjectRouter";
+// import PublicRouter from "./components/router/PublicRouter";
 import { useState } from "react";
-import PublicRouter from "./components/router/PublicRouter";
-// import axios from "axios";
+import Master from "./components/layout/Master";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Register from "./components/modules/Register";
+import Login from "./components/modules/auth/Login";
+import Alert from "./components/layout/Alert";
+import NotFound from "./components/partials/404";
 
 function App() {
-  const [auth, setAuth] = useState(false);
- 
+  const [alert, setAlert] = useState(null);
+  const token = localStorage.getItem("token");
+
+  const showAlert = (message, type) => {
+    setAlert({
+      msg: message,
+      type: type,
+    });
+    setTimeout(() => {
+      setAlert(null);
+    }, 1500);
+  };
 
   return (
     <>
-      {auth ? (
-        <RouterProvider router={ProjectRouter} />
-      ) : ( 
+      {/* {auth ? (
         <RouterProvider router={PublicRouter} />
-      )}
+      ) : (
+        <RouterProvider router={ProjectRouter} />
+      )} */}
+
+      <Router>
+        <Alert alert={alert} />
+        <div className="container">
+          <Routes>
+            <Route exact path="/" element={<Login showAlert={showAlert} />} />
+            <Route exact path="/404" element={<NotFound />} />
+            {token !== undefined && (
+              <Route exact path="/master" element={<Master token={token}/>} />
+            )}
+
+            <Route
+              exact
+              path="/register"
+              element={<Register showAlert={showAlert} />}
+            />
+          </Routes>
+        </div>
+      </Router>
     </>
   );
 }

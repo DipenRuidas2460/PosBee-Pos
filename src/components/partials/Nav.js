@@ -1,16 +1,24 @@
 import React from "react";
 import $ from "jquery";
+import { useNavigate } from "react-router-dom";
 
 function Nav() {
+  const navigate = useNavigate();
+
   const handleSidebar = () => {
     $("body").toggleClass("sb-sidenav-toggled");
+  };
+
+  const handleLogOut = () => {
+    localStorage.removeItem("token");
+    navigate("/");
   };
 
   return (
     <nav className="navbar navbar-static-top" role="navigation">
       {/* Navbar Brand */}
 
-      <a className="navbar-brand ps-3" href="/home">
+      <a className="navbar-brand ps-3" href="/master">
         <span className="logo">Balaji Restaurant</span>
       </a>
 
@@ -19,7 +27,7 @@ function Nav() {
       <button
         className="btn btn-link btn-sm order-1 order-lg-0  me-auto"
         id="sidebarToggle"
-        href="/"
+        href="/master"
         onClick={handleSidebar}
         style={{ color: "#fff" }}
       >
@@ -34,10 +42,9 @@ function Nav() {
           <a
             className="nav-link dropdown-toggle"
             id="navbarDropdown"
-            href="/"
+            href="/master"
             role="button"
             data-bs-toggle="dropdown"
-            aria-expanded="false"
           >
             <i className="fas fa-user fa-fw"></i>
           </a>
@@ -46,12 +53,12 @@ function Nav() {
             aria-labelledby="navbarDropdown"
           >
             <li>
-              <a className="dropdown-item" href="/">
+              <a className="dropdown-item" href="/master">
                 Settings
               </a>
             </li>
             <li>
-              <a className="dropdown-item" href="/">
+              <a className="dropdown-item" href="/master">
                 Activity Log
               </a>
             </li>
@@ -59,9 +66,9 @@ function Nav() {
               <hr className="dropdown-divider" />
             </li>
             <li>
-              <a className="dropdown-item" href="/">
+              <button className="dropdown-item" onClick={handleLogOut}>
                 Logout
-              </a>
+              </button>
             </li>
           </ul>
         </li>
