@@ -12,7 +12,7 @@ function Login({ showAlert }) {
     axios
       .post(`${host}/profile/login`, input)
       .then((result) => {
-        if (result.data.status === 'success') {
+        if (result.data.status === "success") {
           localStorage.setItem("token", result.data.token);
           showAlert("User Logged-In Successfully!", "success");
           navigate("/master");
@@ -70,15 +70,19 @@ function Login({ showAlert }) {
                   />
                 </label>
 
-                <div className="d-grid mt-4">
+                <div className="d-grid mt-3 pb-2">
                   <button className={"btn btn-outline-warning"}>Login</button>
                 </div>
+                <a
+                  className="mt-2"
+                  href="/forgotpass"
+                  style={{ color: "yellow", cursor: "pointer" }}
+                >
+                  Forgot Password
+                </a>
                 <p className="mt-2" style={{ color: "white" }}>
                   Don't have any account please{" "}
-                  <a
-                    href="/register"
-                    style={{ color: "yellow" }}
-                  >
+                  <a href="/register" style={{ color: "yellow" }}>
                     Register
                   </a>
                 </p>

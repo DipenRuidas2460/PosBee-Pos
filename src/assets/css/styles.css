@@ -662,7 +662,7 @@ progress {
 }
 @media (min-width: 1400px) {
   .container-xxl, .container-xl, .container-lg, .container-md, .container-sm, .container {
-    max-width: 1320px;
+    max-width: 1550px;
   }
 }
 .row {
@@ -11239,4 +11239,10 @@ body {
   width: 20px !important;
   font-size: 0.75rem;
   border-radius: 0.375rem !important;
+}
+
+.navbarbalaji{
+  height: 10%;
+  width: 100%;
+  display: block;
 }

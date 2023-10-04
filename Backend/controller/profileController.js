@@ -30,7 +30,7 @@ const login = async (req, res) => {
     if (!userDetails) {
       return res
         .status(401)
-        .json({ status: 'error', message: "email incorrect" });
+        .json({ status: "error", message: "email incorrect" });
     }
 
     const isPassMatch = await checkPassword(
@@ -41,7 +41,7 @@ const login = async (req, res) => {
     if (!isPassMatch) {
       return res
         .status(401)
-        .json({ status: 'error', message: "Incorrect password, try again" });
+        .json({ status: "error", message: "Incorrect password, try again" });
     }
 
     const token = jwt.sign(
@@ -64,7 +64,7 @@ const login = async (req, res) => {
 
     res.header("Authorization", `Bearer ${token}`);
     return res.status(200).json({
-      status: 'success',
+      status: "success",
       token,
       userdata: data,
       message: "Login successfull",
@@ -158,17 +158,19 @@ const forgetPass = async (req, res) => {
   try {
     const { email } = req.body;
 
-    const userDetails = await User.findOne({ email, raw: true });
+    const userDetails = await User.findOne({
+      where: { email: email }
+    });
     if (!userDetails) {
-      res.status(403).json({ status: 403, message: "No user found" });
+      return res.status(404).json({ status: false, message: "No user found" });
     }
 
     const token = generateString(20);
     const saveToken = await User.update(
       { fpToken: token },
-      { where: { email } }
+      { where: { email: email } }
     );
-    if (saveToken[0] === 0) throw "Something went wrong";
+    // if (saveToken[0] === 0) throw "Something went wrong";
 
     const mailData = {
       respMail: email,
@@ -184,41 +186,23 @@ const forgetPass = async (req, res) => {
   </head>
   <body>
     <h3>Click this link for changing Password</h3>
-    <p>http://localhost:4200/reset-password/${token}</p>
+    <p>http://localhost:${process.env.PORT}/reset-password/${token}</p>
   </body>
 </html>
 `,
     };
     const mailResp = await sendMail(mailData);
 
-    return res
-      .status(200)
-      .json({ status: 200, message: "Check your email for reset link" });
+    return res.status(200).json({
+      status: "success",
+      token: token,
+      message: "Check your email for reset link",
+    });
   } catch (error) {
-    console.log("error===>", error.message);
+    console.log("error===>", error);
     return res
       .status(500)
-      .json({ status: "error", message: "Something went wrong" });
-  }
-};
-
-const checkToken = async (req, res) => {
-  try {
-    let reqBody = req.body;
-
-    const { token } = req.params;
-
-    const userInfo = await User.findOne({ where: { fpToken: token } });
-    if (!userInfo) {
-      return res.status(204).json({ status: 204 });
-    } else {
-      return res.status(200).json({ status: 200 });
-    }
-  } catch (error) {
-    console.log("error==========>", error.message);
-    return res
-      .status(500)
-      .json({ status: 500, message: "Something went wrong" });
+      .json({ status: false, message: "Something went wrong" });
   }
 };
 
@@ -248,6 +232,26 @@ const fpUpdatePass = async (req, res) => {
       message:
         response[0] === 0 ? "Nothing updated" : "User successfully created!",
     });
+  } catch (error) {
+    console.log("error==========>", error.message);
+    return res
+      .status(500)
+      .json({ status: 500, message: "Something went wrong" });
+  }
+};
+
+const checkToken = async (req, res) => {
+  try {
+    let reqBody = req.body;
+
+    const { token } = req.params;
+
+    const userInfo = await User.findOne({ where: { fpToken: token } });
+    if (!userInfo) {
+      return res.status(204).json({ status: 204 });
+    } else {
+      return res.status(200).json({ status: 200 });
+    }
   } catch (error) {
     console.log("error==========>", error.message);
     return res

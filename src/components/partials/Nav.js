@@ -1,8 +1,14 @@
-import React from "react";
+import React, { useState } from "react";
 import $ from "jquery";
 import { useNavigate } from "react-router-dom";
 
 function Nav() {
+  const [isExpanded, setIsExpanded] = useState(false);
+
+  const toggleContent = () => {
+    setIsExpanded(!isExpanded);
+  };
+
   const navigate = useNavigate();
 
   const handleSidebar = () => {
@@ -45,6 +51,8 @@ function Nav() {
             href="/master"
             role="button"
             data-bs-toggle="dropdown"
+            aria-expanded="false"
+            onClick={toggleContent}
           >
             <i className="fas fa-user fa-fw"></i>
           </a>
@@ -61,9 +69,6 @@ function Nav() {
               <a className="dropdown-item" href="/master">
                 Activity Log
               </a>
-            </li>
-            <li>
-              <hr className="dropdown-divider" />
             </li>
             <li>
               <button className="dropdown-item" onClick={handleLogOut}>

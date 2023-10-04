@@ -6,9 +6,9 @@ import Footer from "../partials/Footer";
 import Dashboard from "../modules/Dashboard";
 import NotFound from "../partials/404";
 
-function Master({ token }) {
+function Master({ token, showAlert }) {
   return (
-    <>
+    <div>
       {token ? (
         <>
           <Nav />
@@ -21,7 +21,6 @@ function Master({ token }) {
                 </div>
               </main> */}
               <Dashboard />
-
               <Footer />
             </div>
           </div>
@@ -29,7 +28,7 @@ function Master({ token }) {
       ) : (
         <NotFound />
       )}
-    </>
+    </div>
   );
 }
 

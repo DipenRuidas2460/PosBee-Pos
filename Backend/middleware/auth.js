@@ -6,7 +6,7 @@ const validateTokenMiddleware = (req, res, next) => {
   let token = req.headers.authorization;
 
   if (!token) {
-    return res.status(401).json({ status: "error", error: "unauthorized" });
+    return res.status(401).json({ status: "error", msg: "UnAuthorized" });
   }
   token = token.split(" ")[1];
 
