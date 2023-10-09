@@ -29,7 +29,7 @@ const sendMail = async (data) => {
       }
     });
   } catch (error) {
-    console.log("error======>", error.message);
+    console.log(error.message);
     return false;
   }
 };

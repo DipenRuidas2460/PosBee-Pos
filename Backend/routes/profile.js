@@ -8,10 +8,15 @@ const {
   forgetPass,
   fpUpdatePass,
   checkToken,
+  logOut,
+  getLoginStatus
 } = require("../controller/profileController");
 
-router.post("/login", login);
+
 router.post("/register", addUser);
+router.post("/login", login);
+router.get("/logout", logOut);
+router.get("/loginstatus", getLoginStatus);
 router.post("/forgotpass", forgetPass);
 router.post("/resetpass", fpUpdatePass);
 router.get("/category", getCategory);

@@ -24,7 +24,6 @@ function ForgotPass({ showAlert }) {
       .catch((err) => {
         showAlert("You don't any account please register first!", "danger");
         navigate("/register");
-        console.log(err.message);
       });
   };
 

@@ -1,7 +1,5 @@
-const { Model, DataTypes } = require("sequelize");
+const { Model, DataTypes, Sequelize } = require("sequelize");
 const sequelize = require("../config/dbConfig");
-
-// const package = require("./package");
 
 class User extends Model {}
 
@@ -12,7 +10,16 @@ User.init(
       primaryKey: true,
       autoIncrement: true,
     },
-    name: {
+    prefix: {
+      type: Sequelize.ENUM,
+      values: ["Mr", "Mrs", "Miss"],
+    },
+    firstName: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      require: true,
+    },
+    lastName: {
       type: DataTypes.STRING,
       allowNull: false,
       require: true,
@@ -29,55 +36,44 @@ User.init(
     },
     phoneNumber: {
       type: DataTypes.STRING,
-      allowNull: true,
+      allowNull: false,
       require: true,
     },
-    // address: {
-    //   type: DataTypes.STRING,
-    // },
-    // zip: {
-    //   type: DataTypes.STRING,
-    // },
-    // subscriptionType: {
-    //   type: DataTypes.STRING,
-    // },
-    // isPremium: {
-    //   type: DataTypes.BOOLEAN,
-    // },
-    // catagory: {
-    //   type: DataTypes.INTEGER,
-    // },
-    // status: {
-    //   type: DataTypes.INTEGER,
-    //   defaultValue: 0,
-    // },
-    // createdTime: {
-    //   type: DataTypes.DATE,
-    // },
-    // streamKey: {
-    //   type: DataTypes.STRING,
-    // },
-    // userType: {
-    //   type: DataTypes.INTEGER,
-    // },
-    // fpToken: {
-    //   type: DataTypes.STRING,
-    // },
+    role: {
+      type: DataTypes.ENUM("customer", "admin"),
+      defaultValue: "customer",
+    },
+    photo:{
+      type: DataTypes.STRING,
+      defaultValue:"https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_960_720.png",
+    },
+    language: {
+      type: Sequelize.ENUM,
+      values: [
+        "English",
+        "Spanish - Espanol",
+        "Albanian - Shqip",
+        "Hindi",
+        "Dutch",
+        "French - Francais",
+        "German - Deutsch",
+        "Arabic",
+      ],
+    },
+    fpToken: {
+      type: DataTypes.STRING,
+    },
+    isDeleted: { type: DataTypes.BOOLEAN, defaultValue: false },
   },
   {
     tableName: "users",
-    // timestamps: false,
     sequelize,
   }
 );
 
 (async () => {
-  await User.sync({force:false});
+  await User.sync({ force: false });
 })();
 
-// User.hasOne(package, {
-//   foreignKey: "subscriptionType",
-//   sourceKey: "subscriptionType",
-// });
 
 module.exports = User;

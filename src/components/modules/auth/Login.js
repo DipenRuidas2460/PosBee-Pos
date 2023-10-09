@@ -44,7 +44,7 @@ function Login({ showAlert }) {
           <div className="col-md-6">
             <div className="card bg-theme">
               <div className="card-header">
-                <h4>Login</h4>
+                <h4>PosBee Login</h4>
               </div>
               <div className="card-body">
                 <label className={"w-100"}>

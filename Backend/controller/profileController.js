@@ -1,6 +1,6 @@
 const User = require("../models/Users");
 const Category = require("../models/category");
-// const Packages = require("../models/package");
+const asyncHandler = require("express-async-handler");
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
 const {
@@ -14,72 +14,10 @@ const { sendMail } = require("../helpers/sendMail");
 const secretKey = process.env.TOKEN_secret_key;
 const expiresIn = "24h";
 
-const login = async (req, res) => {
-  try {
-    const { email, password } = req.body;
-
-    if (!email || !password) {
-      return res.status(401).json({
-        status: "error",
-        message: "Send valid email and Password",
-      });
-    }
-
-    let userDetails = await User.findOne({ where: { email }, raw: true });
-
-    if (!userDetails) {
-      return res
-        .status(401)
-        .json({ status: "error", message: "email incorrect" });
-    }
-
-    const isPassMatch = await checkPassword(
-      password.trim(),
-      userDetails.password
-    );
-
-    if (!isPassMatch) {
-      return res
-        .status(401)
-        .json({ status: "error", message: "Incorrect password, try again" });
-    }
-
-    const token = jwt.sign(
-      { id: userDetails.id, userType: userDetails.userType },
-      secretKey,
-      { expiresIn }
-    );
-    const data = {
-      id: userDetails.id,
-      name: userDetails.name,
-      email: userDetails.email,
-      userType: userDetails.userType,
-      parentId: userDetails.parentId,
-      status: userDetails.status,
-      accessLevel: userDetails.accessLevel,
-      createdAt: userDetails.createdAt,
-      isPremium: userDetails.isPremium,
-      subscriptionType: userDetails.subscriptionType,
-    };
-
-    res.header("Authorization", `Bearer ${token}`);
-    return res.status(200).json({
-      status: "success",
-      token,
-      userdata: data,
-      message: "Login successfull",
-    });
-  } catch (error) {
-    console.log(error.message);
-    return res
-      .status(500)
-      .json({ status: false, data: error, message: "Login fail" });
-  }
-};
-
-const addUser = async (req, res) => {
+const addUser = asyncHandler(async (req, res) => {
   try {
     const reqBody = req.body;
+
     const currentDate = moment().tz("Asia/Kolkata").format("YYYY-MM-DD, HH:mm");
 
     const findEmail = await User.findOne({ where: { email: reqBody.email } });
@@ -118,26 +56,143 @@ const addUser = async (req, res) => {
     const mailData = {
       respMail: reqBody.email,
       subject: "Welcome",
-      text: `Hi, ${reqBody.name}. Welcome to OBSM`,
+      text: `Hi, ${reqBody.firstName} ${reqBody.lastName}. Welcome to Olx`,
     };
     const mailResp = await sendMail(mailData);
 
-    return res.status(201).json({
-      status: true,
-      data: response,
-      mailData: mailData,
-      token: token,
-      message: "User successfully created!",
-    });
+    if (response) {
+      const { id, firstName, lastName, prefix, email, phoneNumber, role } =
+        response;
+      res.cookie("token", token, {
+        path: "/",
+        httpOnly: true,
+        expires: new Date(Date.now() + 1000 * 86400),
+      });
+      return res.status(201).json({
+        status: true,
+        id,
+        firstName,
+        lastName,
+        prefix,
+        email,
+        phoneNumber,
+        role,
+        token,
+        message: "User successfully created!",
+      });
+    } else {
+      return res
+        .status(400)
+        .json({ status: false, message: "User is not created!" });
+    }
   } catch (error) {
     console.log(error.message);
     return res
       .status(500)
       .json({ status: false, message: "Something went wrong" });
   }
-};
+});
 
-const getCategory = async (req, res) => {
+const login = asyncHandler(async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    if (!email || !password) {
+      return res.status(401).json({
+        status: "error",
+        message: "Send valid email and Password",
+      });
+    }
+
+    const userDetails = await User.findOne({ where: { email: email } });
+
+    if (!userDetails) {
+      return res
+        .status(401)
+        .json({ status: "error", message: "email incorrect" });
+    }
+
+    const isPassMatch = await checkPassword(password, userDetails.password);
+
+    if (!isPassMatch) {
+      return res
+        .status(401)
+        .json({ status: "error", message: "Incorrect password, try again" });
+    }
+
+    const token = jwt.sign(
+      { id: userDetails.id, userType: userDetails.userType },
+      secretKey,
+      { expiresIn }
+    );
+    const data = {
+      id: userDetails.id,
+      firstName: userDetails.firstName,
+      firstName: userDetails.lastName,
+      email: userDetails.email,
+      role: userDetails.role,
+      prefix: userDetails.prefix,
+      phoneNumber: userDetails.phoneNumber,
+      token: userDetails.token,
+    };
+
+    res.header("Authorization", `Bearer ${token}`);
+    res.cookie("token", token, {
+      path: "/",
+      httpOnly: true,
+      expires: new Date(Date.now() + 1000 * 86400),
+    });
+    return res.status(200).json({
+      status: "success",
+      token,
+      userdata: data,
+      message: "Login successfull",
+    });
+  } catch (error) {
+    console.log(error.message);
+    return res
+      .status(500)
+      .json({ status: false, data: error.message, message: "Login fail" });
+  }
+});
+
+const logOut = asyncHandler(async (req, res) => {
+  try {
+    res.cookie("token", "", {
+      path: "/",
+      httpOnly: true,
+      expires: new Date(0),
+    });
+    return res.status(200).json({
+      status: true,
+      msg: "Successfully Logged Out!",
+    });
+  } catch (error) {
+    console.log(error.message);
+    return res
+      .status(500)
+      .json({ status: false, data: error.message, message: "LogOut Failed!" });
+  }
+});
+
+const getLoginStatus = asyncHandler(async (req, res) => {
+  try {
+    let token = req.cookies.token;
+    const secretKey = process.env.TOKEN_secret_key;
+    if (!token) {
+      return res.status(401).json(false);
+    }
+    const decodedToken = jwt.verify(token, secretKey);
+    if (decodedToken) {
+      return res.status(200).json(true);
+    }
+  } catch (err) {
+    console.log(err.message);
+    return res.status(500).json({ status: false, message: err.message });
+  }
+});
+
+const getCategory = asyncHandler(async (req, res) => {
   try {
     const response = await Category.findAll({ raw: true });
 
@@ -152,14 +207,14 @@ const getCategory = async (req, res) => {
       .status(500)
       .json({ status: 500, message: "Something went wrong" });
   }
-};
+});
 
-const forgetPass = async (req, res) => {
+const forgetPass = asyncHandler(async (req, res) => {
   try {
     const { email } = req.body;
 
     const userDetails = await User.findOne({
-      where: { email: email }
+      where: { email: email },
     });
     if (!userDetails) {
       return res.status(404).json({ status: false, message: "No user found" });
@@ -199,14 +254,14 @@ const forgetPass = async (req, res) => {
       message: "Check your email for reset link",
     });
   } catch (error) {
-    console.log("error===>", error);
+    console.log(error.message);
     return res
       .status(500)
       .json({ status: false, message: "Something went wrong" });
   }
-};
+});
 
-const fpUpdatePass = async (req, res) => {
+const fpUpdatePass = asyncHandler(async (req, res) => {
   try {
     let reqBody = req.body;
 
@@ -230,7 +285,9 @@ const fpUpdatePass = async (req, res) => {
       status: response[0] === 0 ? 404 : 200,
       data: response,
       message:
-        response[0] === 0 ? "Nothing updated" : "User successfully created!",
+        response[0] === 0
+          ? "Nothing updated"
+          : "User Password changed successfully!",
     });
   } catch (error) {
     console.log("error==========>", error.message);
@@ -238,9 +295,9 @@ const fpUpdatePass = async (req, res) => {
       .status(500)
       .json({ status: 500, message: "Something went wrong" });
   }
-};
+});
 
-const checkToken = async (req, res) => {
+const checkToken = asyncHandler(async (req, res) => {
   try {
     let reqBody = req.body;
 
@@ -253,12 +310,12 @@ const checkToken = async (req, res) => {
       return res.status(200).json({ status: 200 });
     }
   } catch (error) {
-    console.log("error==========>", error.message);
+    console.log(error.message);
     return res
       .status(500)
       .json({ status: 500, message: "Something went wrong" });
   }
-};
+});
 
 module.exports = {
   login,
@@ -267,4 +324,6 @@ module.exports = {
   forgetPass,
   fpUpdatePass,
   checkToken,
+  logOut,
+  getLoginStatus,
 };

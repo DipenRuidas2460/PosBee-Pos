@@ -4,9 +4,12 @@ import { useNavigate } from "react-router-dom";
 
 function Register({ showAlert }) {
   const [formData, setFormData] = useState({
-    name: "",
+    prefix: "",
+    firstName: "",
+    lastName: "",
     email: "",
     phoneNumber: "",
+    language: "",
     password: "",
   });
 
@@ -17,7 +20,7 @@ function Register({ showAlert }) {
     const { name, value } = e.target;
     setFormData((prevData) => ({
       ...prevData,
-      [name]: value,
+      [name]: value.trim(),
     }));
   };
 
@@ -45,7 +48,7 @@ function Register({ showAlert }) {
           showAlert("Phone Number is already present!", "danger");
         } else {
           console.log(err.message);
-          showAlert("Something Went Wrong", "danger");
+          showAlert("Something Went Wrong (Please Select Prefix or Language)", "danger");
         }
         navigate("/register");
       });
@@ -62,20 +65,50 @@ function Register({ showAlert }) {
               </div>
               <div className="card-body">
                 <label className={"w-100"}>
-                  <p>Name*</p>
+                  <p>Prefix*</p>
+                  <select
+                    className="form-select"
+                    aria-label="Default select example"
+                    name="prefix"
+                    onChange={handleChange}
+                    required
+                  >
+                    <option defaultValue="Select">Select</option>
+                    <option value="Mr">Mr</option>
+                    <option value="Mrs">Mrs</option>
+                    <option value="Miss">Miss</option>
+                  </select>
+                </label>
+
+                <label className={"w-100 mt-1"}>
+                  <p>First Name*</p>
                   <input
                     className={"form-control"}
                     type={"text"}
-                    value={formData.name}
+                    value={formData.fisrtName}
                     onChange={handleChange}
-                    id="name"
-                    name="name"
+                    id="firstName"
+                    name="firstName"
                     minLength={3}
                     required
                   />
                 </label>
 
-                <label className={"w-100 mt-4"}>
+                <label className={"w-100 mt-1"}>
+                  <p>Last Name*</p>
+                  <input
+                    className={"form-control"}
+                    type={"text"}
+                    value={formData.lastName}
+                    onChange={handleChange}
+                    id="lastName"
+                    name="lastName"
+                    minLength={3}
+                    required
+                  />
+                </label>
+
+                <label className={"w-100 mt-1"}>
                   <p>Email*</p>
                   <input
                     className={"form-control"}
@@ -88,7 +121,7 @@ function Register({ showAlert }) {
                   />
                 </label>
 
-                <label className={"w-100 mt-4"}>
+                <label className={"w-100 mt-1"}>
                   <p>Enter Phone Number*</p>
                   <input
                     type="tel"
@@ -102,7 +135,27 @@ function Register({ showAlert }) {
                   />
                 </label>
 
-                <label className={"w-100 mt-4"}>
+                <label className={"w-100 mt-1"}>
+                  <p>Language*</p>
+                  <select
+                    className="form-select"
+                    aria-label="Default select example"
+                    name="language"
+                    onChange={handleChange}
+                  >
+                    <option defaultValue="Select">Select</option>
+                    <option value="English">English</option>
+                    <option value="Spanish - Espanol">Spanish - Espanol</option>
+                    <option value="Albanian - Shqip">Albanian - Shqip</option>
+                    <option value="Hindi">Hindi</option>
+                    <option value="Dutch">Dutch</option>
+                    <option value="French - Francais">French - Francais</option>
+                    <option value="German - Deutsch">German - Deutsch</option>
+                    <option value="Arabic">Arabic</option>
+                  </select>
+                </label>
+
+                <label className={"w-100 mt-1"}>
                   <p>Password*</p>
                   <input
                     className={"form-control"}
@@ -117,7 +170,7 @@ function Register({ showAlert }) {
                   />
                 </label>
 
-                <div className="d-grid mt-4">
+                <div className="d-grid mt-2">
                   <button className={"btn btn-outline-warning"}>
                     Register
                   </button>
