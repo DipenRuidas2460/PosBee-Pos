@@ -1,5 +1,4 @@
-const User = require("../models/Users");
-const Category = require("../models/category");
+const User = require("../models/users");
 const asyncHandler = require("express-async-handler");
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
@@ -48,7 +47,7 @@ const addUser = asyncHandler(async (req, res) => {
     const response = await userDetails.save();
 
     const token = jwt.sign(
-      { id: userDetails.id, userType: userDetails.userType },
+      { id: userDetails.id, userType: userDetails.role },
       secretKey,
       { expiresIn }
     );
@@ -56,13 +55,12 @@ const addUser = asyncHandler(async (req, res) => {
     const mailData = {
       respMail: reqBody.email,
       subject: "Welcome",
-      text: `Hi, ${reqBody.firstName} ${reqBody.lastName}. Welcome to Olx`,
+      text: `Hi, ${reqBody.name}. Welcome to Olx Clone Website`,
     };
     const mailResp = await sendMail(mailData);
 
     if (response) {
-      const { id, firstName, lastName, prefix, email, phoneNumber, role } =
-        response;
+      const { id, name, email, phoneNumber, role } = response;
       res.cookie("token", token, {
         path: "/",
         httpOnly: true,
@@ -71,9 +69,7 @@ const addUser = asyncHandler(async (req, res) => {
       return res.status(201).json({
         status: true,
         id,
-        firstName,
-        lastName,
-        prefix,
+        name,
         email,
         phoneNumber,
         role,
@@ -126,12 +122,10 @@ const login = asyncHandler(async (req, res) => {
       { expiresIn }
     );
     const data = {
-      id: userDetails.id,
-      firstName: userDetails.firstName,
-      firstName: userDetails.lastName,
+      userId: userDetails.id,
+      name: userDetails.name,
       email: userDetails.email,
       role: userDetails.role,
-      prefix: userDetails.prefix,
       phoneNumber: userDetails.phoneNumber,
       token: userDetails.token,
     };
@@ -189,23 +183,6 @@ const getLoginStatus = asyncHandler(async (req, res) => {
   } catch (err) {
     console.log(err.message);
     return res.status(500).json({ status: false, message: err.message });
-  }
-});
-
-const getCategory = asyncHandler(async (req, res) => {
-  try {
-    const response = await Category.findAll({ raw: true });
-
-    return res.status(200).json({
-      status: 200,
-      data: response,
-      message: response.length ? "Successfully fetch data" : "No data found",
-    });
-  } catch (error) {
-    console.log("error====>", error.message);
-    return res
-      .status(500)
-      .json({ status: 500, message: "Something went wrong" });
   }
 });
 
@@ -290,7 +267,7 @@ const fpUpdatePass = asyncHandler(async (req, res) => {
           : "User Password changed successfully!",
     });
   } catch (error) {
-    console.log("error==========>", error.message);
+    console.log(error.message);
     return res
       .status(500)
       .json({ status: 500, message: "Something went wrong" });
@@ -320,7 +297,6 @@ const checkToken = asyncHandler(async (req, res) => {
 module.exports = {
   login,
   addUser,
-  getCategory,
   forgetPass,
   fpUpdatePass,
   checkToken,

@@ -9,9 +9,10 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cors());
 app.use(cookieParser())
 
-const apiRoutes = require("../Backend/routes/api");
 const userRoutes = require("../Backend/routes/user");
 const profileRoutes = require("../Backend/routes/profile");
+const chatRoutes = require('../Backend/routes/chat')
+const messageRoutes = require('../Backend/routes/message')
 const { validateTokenMiddleware } = require("../Backend/middleware/auth");
 
 app.use(function (req, res, next) {
@@ -31,7 +32,9 @@ app.use(function (req, res, next) {
 
 app.use("/profile", profileRoutes);
 app.use("/user", validateTokenMiddleware, userRoutes);
-app.use("/api", validateTokenMiddleware, apiRoutes);
+app.use('/chat', validateTokenMiddleware, chatRoutes)
+app.use('/message', validateTokenMiddleware, messageRoutes)
+
 
 app.get("/", (req, res) => {
   return res.status(200).send("Home Page...");

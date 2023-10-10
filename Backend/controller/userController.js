@@ -1,5 +1,5 @@
 const { encryptPassword } = require("../helpers/main");
-const User = require("../models/Users");
+const User = require("../models/users");
 const { checkPassword } = require("../helpers/main");
 const asyncHandler = require("express-async-handler");
 
@@ -35,14 +35,11 @@ const getUserById = asyncHandler(async (req, res) => {
       where: { id: req.user.id },
       attributes: [
         "id",
-        "prefix",
-        "firstName",
-        "lastName",
+        'name',
         "email",
         "role",
         "phoneNumber",
         "photo",
-        "language",
       ],
     });
 
@@ -60,6 +57,23 @@ const getUserById = asyncHandler(async (req, res) => {
       .json({ status: 500, message: "Something went wrong" });
   }
 });
+
+const getAllUsers = async (req, res) => {
+  try {
+    const response = await User.findAll({ raw: true });
+
+    return res.status(200).json({
+      status: "success",
+      data: response,
+      message: response.length ? "Successfully fetch data" : "No data found",
+    });
+  } catch (error) {
+    console.log(error.message);
+    return res
+      .status(500)
+      .json({ status: 500, message: "Something went wrong" });
+  }
+};
 
 const updatePassword = asyncHandler(async (req, res) => {
   try {
@@ -110,4 +124,5 @@ module.exports = {
   updateUser,
   getUserById,
   updatePassword,
+  getAllUsers
 };

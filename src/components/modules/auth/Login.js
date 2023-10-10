@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+// import { Box, Container, Text } from "@chakra-ui/react";
 
 function Login({ showAlert }) {
   const [input, setInput] = useState({ email: "", password: "" });
@@ -38,60 +39,86 @@ function Login({ showAlert }) {
   };
 
   return (
-    <div className="container-fluid" id={"login"}>
-      <form onSubmit={handleSubmit}>
-        <div className="row">
-          <div className="col-md-6">
-            <div className="card bg-theme">
-              <div className="card-header">
-                <h4>PosBee Login</h4>
-              </div>
-              <div className="card-body">
-                <label className={"w-100"}>
-                  <p>Email*</p>
-                  <input
-                    className={"form-control"}
-                    type={"text"}
-                    name={"email"}
-                    value={input.email}
-                    onChange={(e) => handleinput(e)}
-                    required
-                  />
-                </label>
-                <label className={"w-100 mt-4"}>
-                  <p>Password*</p>
-                  <input
-                    className={"form-control"}
-                    type={"password"}
-                    name={"password"}
-                    value={input.password}
-                    onChange={(e) => handleinput(e)}
-                    required
-                  />
-                </label>
-
-                <div className="d-grid mt-3 pb-2">
-                  <button className={"btn btn-outline-warning"}>Login</button>
+    <>
+      <div className="container-fluid" id={"login"}>
+        <form onSubmit={handleSubmit}>
+          <div className="row">
+            <div className="col-md-6">
+              <div className="card bg-theme">
+                <div className="card-header">
+                  <h4>Login</h4>
                 </div>
-                <a
-                  className="mt-2"
-                  href="/forgotpass"
-                  style={{ color: "yellow", cursor: "pointer" }}
-                >
-                  Forgot Password
-                </a>
-                <p className="mt-2" style={{ color: "white" }}>
-                  Don't have any account please{" "}
-                  <a href="/register" style={{ color: "yellow" }}>
-                    Register
+                <div className="card-body">
+                  <label className={"w-100"}>
+                    <p>Email*</p>
+                    <input
+                      className={"form-control"}
+                      type={"email"}
+                      name={"email"}
+                      value={input.email}
+                      onChange={(e) => handleinput(e)}
+                      required
+                    />
+                  </label>
+                  <label className={"w-100 mt-4"}>
+                    <p>Password*</p>
+                    <input
+                      className={"form-control"}
+                      type={"password"}
+                      name={"password"}
+                      value={input.password}
+                      onChange={(e) => handleinput(e)}
+                      required
+                    />
+                  </label>
+
+                  <div className="d-grid mt-3 pb-2">
+                    <button className={"btn btn-outline-warning"}>Login</button>
+                  </div>
+                  <a
+                    className="mt-2"
+                    href="/forgotpass"
+                    style={{ color: "yellow", cursor: "pointer" }}
+                  >
+                    Forgot Password
                   </a>
-                </p>
+                  <p className="mt-2" style={{ color: "white" }}>
+                    Don't have any account please{" "}
+                    <a href="/register" style={{ color: "yellow" }}>
+                      Register
+                    </a>
+                  </p>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      </form>
-    </div>
+        </form>
+      </div>
+
+      {/* <Container maxW="xl" centerContent>
+        <Box
+          d="flex"
+          justifyContent="center"
+          p={3}
+          bg="white"
+          w="100%"
+          m="60px 0 15px 0"
+          borderRadius="lg"
+          borderWidth="1px"
+        >
+          <Text fontSize="4xl">Login</Text>
+        </Box>
+        <Box
+          p={4}
+          bg="white"
+          w="100%"
+          borderRadius="lg"
+          borderWidth="1px"
+        >
+         
+        </Box>
+      </Container> */}
+    </>
   );
 }
 

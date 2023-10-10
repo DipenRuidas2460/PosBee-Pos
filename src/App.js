@@ -6,12 +6,13 @@ import "./assets/css/style.scss";
 import { useState } from "react";
 import Master from "./components/layout/Master";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Register from "./components/modules/Register";
 import Login from "./components/modules/auth/Login";
 import Alert from "./components/layout/Alert";
 import NotFound from "./components/partials/404";
 import ForgotPass from "./components/modules/ForgotPass";
 import SentMailMessage from "./components/modules/SentMailMessage";
+import ChatPage from "./components/partials/ChatPage";
+import Register from "./components/modules/auth/Register";
 
 function App() {
   const [alert, setAlert] = useState(null);
@@ -28,7 +29,7 @@ function App() {
   };
 
   return (
-    <>
+    <div className="App">
       {/* {auth ? (
         <RouterProvider router={PublicRouter} />
       ) : (
@@ -41,10 +42,18 @@ function App() {
           <Routes>
             <Route exact path="/" element={<Login showAlert={showAlert} />} />
             <Route exact path="/404" element={<NotFound />} />
-            <Route exact path="/forgotpass" element={<ForgotPass showAlert={showAlert} />} />
+            <Route
+              exact
+              path="/forgotpass"
+              element={<ForgotPass showAlert={showAlert} />}
+            />
             <Route exact path="/mailsent" element={<SentMailMessage />} />
             {token !== undefined && (
-              <Route exact path="/master" element={<Master token={token} showAlert={showAlert}/>} />
+              <Route
+                exact
+                path="/master"
+                element={<Master token={token} showAlert={showAlert} />}
+              />
             )}
 
             <Route
@@ -52,10 +61,16 @@ function App() {
               path="/register"
               element={<Register showAlert={showAlert} />}
             />
+
+            <Route
+              exact
+              path="/chats"
+              element={<ChatPage />}
+            />
           </Routes>
         </div>
       </Router>
-    </>
+    </div>
   );
 }
 

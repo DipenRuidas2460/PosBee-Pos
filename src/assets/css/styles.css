@@ -11246,3 +11246,11 @@ body {
   width: 100%;
   display: block;
 }
+
+.App{
+  min-height: 100vh;
+  display: flex;
+  background-image: url('../images/background.png');
+  background-size: cover;
+  background-position: center;
+}

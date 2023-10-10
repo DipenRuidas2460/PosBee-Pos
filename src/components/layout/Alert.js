@@ -7,7 +7,7 @@ function Alert({ alert }) {
     return lower.charAt(0).toUpperCase() + lower.slice(1);
   };
   return (
-    <div style={{ height: "50px", zIndex: 2 }}>
+    <div style={{ height: "50px", zIndex: 2}}>
       {alert && (
         <div
           className={`alert alert-${alert.type} alert-dismissible fade show`}

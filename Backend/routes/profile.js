@@ -3,7 +3,6 @@ const router = express.Router();
 
 const {
   login,
-  getCategory,
   addUser,
   forgetPass,
   fpUpdatePass,
@@ -19,7 +18,6 @@ router.get("/logout", logOut);
 router.get("/loginstatus", getLoginStatus);
 router.post("/forgotpass", forgetPass);
 router.post("/resetpass", fpUpdatePass);
-router.get("/category", getCategory);
 router.get("/checktoken/:token", checkToken);
 
 module.exports = router;
