@@ -1,52 +1,55 @@
-const { Model, DataTypes } = require("sequelize");
+const { DataTypes } = require("sequelize");
 const sequelize = require("../config/dbConfig");
 const Chat = require("./chats");
 const User = require("./users");
 
-class Message extends Model {}
+sequelize.define("MessageReadBy", {
+  id: {
+    type: DataTypes.INTEGER,
+    primaryKey: true,
+    autoIncrement: true,
+    allowNull: false,
+  },
+});
 
-Message.init(
+const Message = sequelize.define(
+  "Message",
   {
-    id: {
+    senderId: {
       type: DataTypes.INTEGER,
-      primaryKey: true,
-      autoIncrement: true,
+      allowNull: false,
+      references: {
+        model: "User",
+        key: "id",
+      },
     },
     content: {
       type: DataTypes.STRING,
-      allowNull: true,
+      allowNull: false,
       trim: true,
     },
     chatId: {
       type: DataTypes.INTEGER,
+      allowNull: false,
       references: {
-        model: Chat,
-        key: "id",
-      },
-    },
-    senderId: {
-      type: DataTypes.INTEGER,
-      references: {
-        model: User,
+        model: "Chat",
         key: "id",
       },
     },
   },
   {
-    tableName: "messages",
-    sequelize,
+    tableName: "Message",
+    timestamps: true,
   }
 );
 
 (async () => {
-  await Message.sync({ force: true });
+  await Message.sync({ force: false });
 })();
 
-User.hasMany(Message, { foreignKey: "senderId", as: "sender" });
 Message.belongsTo(User, { foreignKey: "senderId", as: "sender" });
 
-// Chat.hasMany(Message, { foreignKey: "chatId", as: "chat" });
-// Message.belongsTo(Chat, { foreignKey: "chatId", as: "chat" });
+// Message.belongsTo(Chat, { foreignKey: "chatId", as: "chat"});
 
 Message.belongsToMany(User, {
   through: "MessageReadBy",

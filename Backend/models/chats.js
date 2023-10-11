@@ -1,11 +1,19 @@
-const { Model, DataTypes } = require("sequelize");
+const { DataTypes } = require("sequelize");
 const sequelize = require("../config/dbConfig");
 const User = require("./users");
 const Message = require("./messages");
 
-class Chat extends Model {}
+sequelize.define("UserChats", {
+  id: {
+    type: DataTypes.INTEGER,
+    primaryKey: true,
+    autoIncrement: true,
+    allowNull: false,
+  },
+});
 
-Chat.init(
+const Chat = sequelize.define(
+  "Chat",
   {
     id: {
       type: DataTypes.INTEGER,
@@ -14,7 +22,7 @@ Chat.init(
     },
     chatName: {
       type: DataTypes.STRING,
-      allowNull: true,
+      allowNull: false,
       trim: true,
     },
     isGroupChat: {
@@ -24,48 +32,39 @@ Chat.init(
     groupAdminId: {
       type: DataTypes.INTEGER,
       references: {
-        model: User,
+        model: "User",
         key: "id",
       },
     },
     latestMessageId: {
       type: DataTypes.INTEGER,
       references: {
-        model: Message,
+        model: "Message",
         key: "id",
       },
     },
   },
   {
-    tableName: "chats",
-    sequelize,
+    timestamps: true,
+    tableName: "Chat",
   }
 );
 
 (async () => {
-  await Chat.sync({ force: true });
+  await Chat.sync({ force: false });
 })();
 
-User.hasMany(Chat, { foreignKey: "groupAdminId", as: "groupAdmin" })
-Chat.belongsTo(User, { foreignKey: "groupAdminId", as: "groupAdmin" });
+Chat.belongsTo(User, { foreignKey: "groupAdminId", as: "users" });
 
-Message.hasMany(Chat, { foreignKey: "latestMessageId", as: "latestMessage" })
-Chat.belongsTo(Message, { foreignKey: "latestMessageId", as: "latestMessage" });
+Chat.belongsTo(Message, {
+  foreignKey: "latestMessageId",
+  as: "latestMessage",
+});
 
 Chat.belongsToMany(User, {
-  through: "UserChat",
+  through: "UserChats",
   foreignKey: "chatId",
   otherKey: "userId",
-  as: "users",
 });
-User.belongsToMany(Chat, {
-  through: "UserChat",
-  foreignKey: "userId",
-  otherKey: "chatId",
-  as: "chats",
-});
-
-// Chat.hasMany(Message, { foreignKey: "chatId", as: "chat" })
-Message.belongsTo(Chat, { foreignKey: "chatId", as: "chat" });
 
 module.exports = Chat;

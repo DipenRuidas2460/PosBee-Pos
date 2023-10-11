@@ -1,9 +1,8 @@
-const { Model, DataTypes} = require("sequelize");
+const { DataTypes } = require("sequelize");
 const sequelize = require("../config/dbConfig");
 
-class User extends Model {}
-
-User.init(
+const User = sequelize.define(
+  "User",
   {
     id: {
       type: DataTypes.INTEGER,
@@ -40,13 +39,12 @@ User.init(
     },
   },
   {
-    tableName: "users",
-    sequelize,
+    tableName: "User",
   }
 );
 
 (async () => {
-  await User.sync({ force: true });
+  await User.sync({ force: false });
 })();
 
 module.exports = User;

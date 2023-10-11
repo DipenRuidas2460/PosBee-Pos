@@ -6,42 +6,43 @@ const { Op } = require("sequelize");
 
 const accessChat = asyncHandler(async (req, res) => {
   try {
-    const { userId } = req.body;
+    const { groupAdminId } = req.body;
 
-    if (!userId) {
-      return res
-        .status(400)
-        .send({ status: false, message: "UserId param not sent with request" });
+    if (!groupAdminId) {
+      return res.status(400).send({
+        status: false,
+        message: "groupAdminId param not sent with request",
+      });
     }
 
     const isChat = await Chat.findAll({
       where: {
         isGroupChat: false,
-        [Op.and]: [{ "$users.id$": req.user.id }, { "$users.id$": userId }],
+        // [Op.and]: [{ "$user.id$": req.user.id }, { "$user.id$": groupAdminId }],
       },
       include: [
         { model: User, as: "users", attributes: { exclude: ["password"] } },
-        {
-          model: Message,
-          as: "latestMessage",
-          include: [
-            {
-              model: User,
-              as: "sender",
-              attributes: ["name", "photo", "email"],
-            },
-          ],
-        },
+        // {
+        //   model: Message,
+        //   as: "latestMessage",
+        //   include: [
+        //     {
+        //       model: User,
+        //       as: "sender",
+        //       attributes: ["name", "photo", "email"],
+        //     },
+        //   ],
+        // },
       ],
     });
 
     if (isChat.length > 0) {
-      res.send(isChat[0]);
+      return res.status(200).json({ isChat: isChat[0] });
     } else {
       const chatData = {
         chatName: "sender",
         isGroupChat: false,
-        users: [{ id: req.user.id }, { id: userId }],
+        groupAdminId: groupAdminId,
       };
 
       const createdChat = await Chat.create(chatData, {
@@ -54,17 +55,17 @@ const accessChat = asyncHandler(async (req, res) => {
         where: { id: createdChat.id },
         include: [
           { model: User, as: "users", attributes: { exclude: ["password"] } },
-          {
-            model: Message,
-            as: "latestMessage",
-            include: [
-              {
-                model: User,
-                as: "sender",
-                attributes: ["name", "photo", "email"],
-              },
-            ],
-          },
+          // {
+          //   model: Message,
+          //   as: "latestMessage",
+          //   include: [
+          //     {
+          //       model: User,
+          //       as: "sender",
+          //       attributes: ["name", "photo", "email"],
+          //     },
+          //   ],
+          // },
         ],
       });
 
@@ -77,7 +78,7 @@ const accessChat = asyncHandler(async (req, res) => {
     return res.status(500).json({
       status: false,
       message: "Internal Server Error",
-      data: err.message,
+      data: err,
     });
   }
 });
@@ -99,17 +100,21 @@ const fetchChats = async (req, res) => {
           model: Message,
           as: "latestMessage",
           include: [
-            { model: User, as: "sender", attributes: ["name", "photo", "email"] },
+            {
+              model: User,
+              as: "sender",
+              attributes: ["name", "photo", "email"],
+            },
           ],
         },
       ],
       order: [["updatedAt", "DESC"]],
     });
 
-    res.status(200).send(results);
+    return res.status(200).send({ status: true, result: results });
   } catch (error) {
-    console.error(error);
-    res.status(400).send(error.message);
+    console.error(error.message);
+    res.status(400).send({ msg: error.message });
   }
 };
 
