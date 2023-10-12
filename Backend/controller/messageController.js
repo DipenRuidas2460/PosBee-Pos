@@ -9,7 +9,7 @@ const allMessages = asyncHandler(async (req, res) => {
       where: { chatId: req.params.chatId },
       include: [
         { model: User, as: "sender", attributes: ["name", "photo", "email"] },
-        { model: Chat, as: "chat" },
+        { model: Chat },
       ],
     });
 
@@ -43,7 +43,6 @@ const sendMessage = asyncHandler(async (req, res) => {
         { model: User, as: "sender", attributes: ["name", "photo"] },
         {
           model: Chat,
-          as: "chat",
           include: [
             {
               model: User,

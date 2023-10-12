@@ -1,27 +1,35 @@
 const { DataTypes } = require("sequelize");
 const sequelize = require("../config/dbConfig");
-const Chat = require("./chats");
 const User = require("./users");
 
-sequelize.define("MessageReadBy", {
-  id: {
-    type: DataTypes.INTEGER,
-    primaryKey: true,
-    autoIncrement: true,
-    allowNull: false,
+sequelize.define(
+  "MessageReadBy",
+  {
+    id: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
+      allowNull: false,
+    },
   },
-});
+  {
+    tableName: "MessageReadBy",
+    timestamps: true,
+  }
+);
 
 const Message = sequelize.define(
   "Message",
   {
+    id: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
+      allowNull: false,
+    },
     senderId: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      references: {
-        model: "User",
-        key: "id",
-      },
     },
     content: {
       type: DataTypes.STRING,
@@ -30,11 +38,6 @@ const Message = sequelize.define(
     },
     chatId: {
       type: DataTypes.INTEGER,
-      allowNull: false,
-      references: {
-        model: "Chat",
-        key: "id",
-      },
     },
   },
   {
@@ -49,13 +52,11 @@ const Message = sequelize.define(
 
 Message.belongsTo(User, { foreignKey: "senderId", as: "sender" });
 
-// Message.belongsTo(Chat, { foreignKey: "chatId", as: "chat"});
-
 Message.belongsToMany(User, {
   through: "MessageReadBy",
-  foreignKey: "messageId",
-  otherKey: "userId",
+  foreignKey: "senderId",
   as: "readBy",
 });
+
 
 module.exports = Message;

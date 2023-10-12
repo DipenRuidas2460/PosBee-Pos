@@ -2,15 +2,23 @@ const { DataTypes } = require("sequelize");
 const sequelize = require("../config/dbConfig");
 const User = require("./users");
 const Message = require("./messages");
+// const MessageChat = require("./messageChat");
 
-sequelize.define("UserChats", {
-  id: {
-    type: DataTypes.INTEGER,
-    primaryKey: true,
-    autoIncrement: true,
-    allowNull: false,
+sequelize.define(
+  "UserChats",
+  {
+    id: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
+      allowNull: false,
+    },
   },
-});
+  {
+    tableName: "UserChats",
+    timestamps: true,
+  }
+);
 
 const Chat = sequelize.define(
   "Chat",
@@ -25,6 +33,7 @@ const Chat = sequelize.define(
       allowNull: false,
       trim: true,
     },
+
     isGroupChat: {
       type: DataTypes.BOOLEAN,
       defaultValue: false,
@@ -63,8 +72,9 @@ Chat.belongsTo(Message, {
 
 Chat.belongsToMany(User, {
   through: "UserChats",
-  foreignKey: "chatId",
-  otherKey: "userId",
+  foreignKey: "groupAdminId",
 });
+
+Message.belongsTo(Chat, { foreignKey: "chatId" });
 
 module.exports = Chat;
