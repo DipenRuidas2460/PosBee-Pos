@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef} from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
@@ -23,7 +23,6 @@ function ForgotPass({ showAlert }) {
       })
       .catch((err) => {
         showAlert("You don't any account please register first!", "danger");
-        navigate("/register");
       });
   };
 
@@ -33,7 +32,7 @@ function ForgotPass({ showAlert }) {
         <div className="col-md-6">
           <div className="card bg-theme">
             <div className="card-header">
-              <h4>Update Password</h4>
+              <h4>Update Password?</h4>
             </div>
             <div className="card-body">
               <label className={"w-100"}>
@@ -52,8 +51,20 @@ function ForgotPass({ showAlert }) {
                   className={"btn btn-outline-warning"}
                   onClick={handleForgotPass}
                 >
-                  Confirm
+                  Sent Reset Link
                 </button>
+
+                <p className="mt-2" style={{ color: "white" }}>
+                  Don't have any account please{" "}
+                  <a href="/register" style={{ color: "yellow" }}>
+                    Register
+                  </a>
+                  <br></br>
+                  If Continue to{" "}
+                  <a href="/" style={{ color: "yellow" }}>
+                    Login
+                  </a>
+                </p>
               </div>
             </div>
           </div>

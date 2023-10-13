@@ -35,7 +35,7 @@ const getUserById = asyncHandler(async (req, res) => {
       where: { id: req.user.id },
       attributes: [
         "id",
-        'name',
+        'fullName',
         "email",
         "role",
         "phoneNumber",

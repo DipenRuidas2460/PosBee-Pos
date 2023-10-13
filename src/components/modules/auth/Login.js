@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-// import { Box, Container, Text } from "@chakra-ui/react";
+import usePasswordToggle from "../../../hook/usePasswordToggle";
 
 function Login({ showAlert }) {
   const [input, setInput] = useState({ email: "", password: "" });
+  const [passwordInputType, ToggleIcon] = usePasswordToggle();
   const navigate = useNavigate();
   const host = `http://localhost:3010`;
 
@@ -14,6 +15,7 @@ function Login({ showAlert }) {
       .post(`${host}/profile/login`, input)
       .then((result) => {
         if (result.data.status === "success") {
+          localStorage.setItem("userInfo", JSON.stringify(result.data.userdata));
           localStorage.setItem("token", result.data.token);
           showAlert("User Logged-In Successfully!", "success");
           navigate("/master");
@@ -62,15 +64,23 @@ function Login({ showAlert }) {
                   </label>
                   <label className={"w-100 mt-4"}>
                     <p>Password*</p>
+                  </label>
+
+                  <div className="input-group mb-3">
                     <input
                       className={"form-control"}
-                      type={"password"}
-                      name={"password"}
+                      type={passwordInputType}
+                      id="password"
+                      name="password"
+                      placeholder="Enter your password"
                       value={input.password}
                       onChange={(e) => handleinput(e)}
+                      minLength={8}
+                      maxLength={16}
                       required
                     />
-                  </label>
+                    <span className="input-group-text">{ToggleIcon}</span>
+                  </div>
 
                   <div className="d-grid mt-3 pb-2">
                     <button className={"btn btn-outline-warning"}>Login</button>
@@ -80,7 +90,7 @@ function Login({ showAlert }) {
                     href="/forgotpass"
                     style={{ color: "yellow", cursor: "pointer" }}
                   >
-                    Forgot Password
+                    Forgot Password?
                   </a>
                   <p className="mt-2" style={{ color: "white" }}>
                     Don't have any account please{" "}
@@ -94,30 +104,6 @@ function Login({ showAlert }) {
           </div>
         </form>
       </div>
-
-      {/* <Container maxW="xl" centerContent>
-        <Box
-          d="flex"
-          justifyContent="center"
-          p={3}
-          bg="white"
-          w="100%"
-          m="60px 0 15px 0"
-          borderRadius="lg"
-          borderWidth="1px"
-        >
-          <Text fontSize="4xl">Login</Text>
-        </Box>
-        <Box
-          p={4}
-          bg="white"
-          w="100%"
-          borderRadius="lg"
-          borderWidth="1px"
-        >
-         
-        </Box>
-      </Container> */}
     </>
   );
 }

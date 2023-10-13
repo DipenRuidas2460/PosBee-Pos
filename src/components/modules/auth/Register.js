@@ -1,16 +1,20 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-// import { FormControl, FormLabel, Input, VStack } from "@chakra-ui/react";
+import usePasswordToggle from "../../../hook/usePasswordToggle";
 
 function Register({ showAlert }) {
   const [formData, setFormData] = useState({
-    name: "",
+    fullName: "",
     email: "",
     phoneNumber: "",
     photo: "",
     password: "",
+    confirmPassword: "",
   });
+
+  const [passwordInputType, ToggleIcon] = usePasswordToggle();
+  const [passwordInputType1, ToggleIcon1] = usePasswordToggle();
 
   const navigate = useNavigate();
   const host = `http://localhost:3010`;
@@ -19,41 +23,45 @@ function Register({ showAlert }) {
     const { name, value } = e.target;
     setFormData((prevData) => ({
       ...prevData,
-      [name]: value.trim(),
+      [name]: value,
     }));
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    axios
-      .post(`${host}/profile/register`, formData)
-      .then((res) => {
-        if (res.status) {
-          localStorage.setItem("token", res.token);
-          showAlert("Account Created Sucessfully!", "success");
-          navigate("/");
-        } else if (res.status === "email conflict") {
+    if (formData.password !== formData.confirmPassword) {
+      showAlert("Password and Confirm Password not matched!", "danger");
+    } else {
+      axios
+        .post(`${host}/profile/register`, formData)
+        .then((res) => {
+          if (res.status) {
+            localStorage.setItem("token", res.token);
+            showAlert("Account Created Sucessfully!", "success");
+            navigate("/");
+          } else if (res.status === "email conflict") {
+            navigate("/register");
+            showAlert("Email is already present!", "danger");
+          } else if (res.status === "phone conflict") {
+            navigate("/register");
+            showAlert("Phone Number is already present!", "danger");
+          }
+        })
+        .catch((err) => {
+          if (err.response.data.status === "email conflict") {
+            showAlert("Email is already present!", "danger");
+          } else if (err.response.data.status === "phone conflict") {
+            showAlert("Phone Number is already present!", "danger");
+          } else {
+            console.log(err.message);
+            showAlert(
+              "Something Went Wrong (Please Select Prefix or Language)",
+              "danger"
+            );
+          }
           navigate("/register");
-          showAlert("Email is already present!", "danger");
-        } else if (res.status === "phone conflict") {
-          navigate("/register");
-          showAlert("Phone Number is already present!", "danger");
-        }
-      })
-      .catch((err) => {
-        if (err.response.data.status === "email conflict") {
-          showAlert("Email is already present!", "danger");
-        } else if (err.response.data.status === "phone conflict") {
-          showAlert("Phone Number is already present!", "danger");
-        } else {
-          console.log(err.message);
-          showAlert(
-            "Something Went Wrong (Please Select Prefix or Language)",
-            "danger"
-          );
-        }
-        navigate("/register");
-      });
+        });
+    }
   };
 
   return (
@@ -68,14 +76,14 @@ function Register({ showAlert }) {
                 </div>
                 <div className="card-body">
                   <label className={"w-100"}>
-                    <p>Name*</p>
+                    <p>Full Name*</p>
                     <input
                       className={"form-control"}
                       type={"text"}
-                      value={formData.name}
-                      onChange={(e) => handleChange(e)}
-                      id={"name"}
-                      name={"name"}
+                      id={"fullName"}
+                      name={"fullName"}
+                      value={formData.fullName}
+                      onChange={handleChange}
                       required
                     />
                   </label>
@@ -123,18 +131,41 @@ function Register({ showAlert }) {
 
                   <label className={"w-100 mt-1"}>
                     <p>Password*</p>
+                  </label>
+                  <div className="input-group mb-3">
                     <input
                       className={"form-control"}
-                      type={"password"}
-                      value={formData.password}
-                      onChange={handleChange}
+                      type={passwordInputType}
                       id="password"
                       name="password"
+                      placeholder="Enter your password"
+                      value={formData.password}
+                      onChange={(e) => handleChange(e)}
                       minLength={8}
                       maxLength={16}
                       required
                     />
+                    <span className="input-group-text">{ToggleIcon}</span>
+                  </div>
+
+                  <label className={"w-100 mt-1"}>
+                    <p>Confirm Password*</p>
                   </label>
+                  <div className="input-group mb-3">
+                    <input
+                      className={"form-control"}
+                      type={passwordInputType1}
+                      placeholder="Enter your password"
+                      value={formData.confirmPassword}
+                      onChange={handleChange}
+                      id="confirmPassword"
+                      name="confirmPassword"
+                      minLength={8}
+                      maxLength={16}
+                      required
+                    />
+                    <span className="input-group-text">{ToggleIcon1}</span>
+                  </div>
 
                   <div className="d-grid mt-2">
                     <button className={"btn btn-outline-warning"}>
@@ -153,15 +184,6 @@ function Register({ showAlert }) {
           </div>
         </form>
       </div>
-
-      {/* <VStack spacing='5px'>
-         <FormControl id="first-name" isRequired>
-          <FormLabel>
-          Name
-          </FormLabel>
-          <Input placeholder="Enter your name" id="name" name="name"  onChange={handleChange}/>
-         </FormControl>
-       </VStack> */}
     </>
   );
 }

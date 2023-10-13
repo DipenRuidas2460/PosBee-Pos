@@ -57,10 +57,11 @@ const addUser = asyncHandler(async (req, res) => {
       subject: "Welcome",
       text: `Hi, ${reqBody.name}. Welcome to Olx Clone Website`,
     };
-    const mailResp = await sendMail(mailData);
+    await sendMail(mailData);
 
     if (response) {
-      const { id, name, email, phoneNumber, role } = response;
+      const { id, fullName, email, phoneNumber, role } = response;
+      res.header("Authorization", `Bearer ${token}`);
       res.cookie("token", token, {
         path: "/",
         httpOnly: true,
@@ -69,7 +70,7 @@ const addUser = asyncHandler(async (req, res) => {
       return res.status(201).json({
         status: true,
         id,
-        name,
+        fullName,
         email,
         phoneNumber,
         role,
@@ -123,7 +124,7 @@ const login = asyncHandler(async (req, res) => {
     );
     const data = {
       userId: userDetails.id,
-      name: userDetails.name,
+      fullName: userDetails.fullName,
       email: userDetails.email,
       role: userDetails.role,
       phoneNumber: userDetails.phoneNumber,
@@ -198,11 +199,10 @@ const forgetPass = asyncHandler(async (req, res) => {
     }
 
     const token = generateString(20);
-    const saveToken = await User.update(
+    await User.update(
       { fpToken: token },
       { where: { email: email } }
     );
-    // if (saveToken[0] === 0) throw "Something went wrong";
 
     const mailData = {
       respMail: email,
@@ -218,12 +218,12 @@ const forgetPass = asyncHandler(async (req, res) => {
   </head>
   <body>
     <h3>Click this link for changing Password</h3>
-    <p>http://localhost:${process.env.PORT}/reset-password/${token}</p>
+    <p>http://localhost:3000/resetpass/${token}</p>
   </body>
 </html>
 `,
     };
-    const mailResp = await sendMail(mailData);
+    await sendMail(mailData);
 
     return res.status(200).json({
       status: "success",
@@ -245,7 +245,10 @@ const fpUpdatePass = asyncHandler(async (req, res) => {
     const { token } = req.body;
 
     const userInfo = await User.findOne({ where: { fpToken: token } });
-    if (!userInfo) throw "Something went wrong";
+    if (!userInfo)
+      return res
+        .status(400)
+        .json({ status: 400, message: "Wrong link or link expired!" });
 
     if (reqBody.password) {
       reqBody.password = await encryptPassword(reqBody.password);
@@ -276,8 +279,6 @@ const fpUpdatePass = asyncHandler(async (req, res) => {
 
 const checkToken = asyncHandler(async (req, res) => {
   try {
-    let reqBody = req.body;
-
     const { token } = req.params;
 
     const userInfo = await User.findOne({ where: { fpToken: token } });

@@ -4,19 +4,15 @@ const secretKey = process.env.TOKEN_secret_key;
 const bcrypt = require("bcrypt");
 
 const validateToken = (token) => {
-  if (!token) {
-    return false;
-  }
-
   try {
+    if (!token) {
+      return false;
+    }
     token = token.split(" ")[1];
-    //  // console.log(process.env.TOKEN_secret_key);
     const decodedToken = jwt.verify(token, secretKey);
-    //  // console.log(decodedToken);
-
     return decodedToken;
   } catch (error) {
-    // console.log(error);
+    console.log(error.message);
     return false;
   }
 };

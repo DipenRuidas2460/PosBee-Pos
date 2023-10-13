@@ -18,9 +18,7 @@ const sendMail = async (data) => {
       text: data.text,
     };
 
-    // console.log(mailOptions);
-
-    const resp = transporter.sendMail(mailOptions, async (error, info) => {
+    transporter.sendMail(mailOptions, async (error, info) => {
       if (error) {
         console.log(error.message);
         return false;

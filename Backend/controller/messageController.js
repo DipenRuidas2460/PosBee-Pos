@@ -8,7 +8,7 @@ const allMessages = asyncHandler(async (req, res) => {
     const messages = await Message.findAll({
       where: { chatId: req.params.chatId },
       include: [
-        { model: User, as: "sender", attributes: ["name", "photo", "email"] },
+        { model: User, as: "sender", attributes: ["fullName", "photo", "email"] },
         { model: Chat },
       ],
     });
@@ -40,14 +40,14 @@ const sendMessage = asyncHandler(async (req, res) => {
 
     const populatedMessage = await Message.findByPk(message.id, {
       include: [
-        { model: User, as: "sender", attributes: ["name", "photo"] },
+        { model: User, as: "sender", attributes: ["fullName", "photo"] },
         {
           model: Chat,
           include: [
             {
               model: User,
               as: "users",
-              attributes: ["name", "photo", "email"],
+              attributes: ["fullName", "photo", "email"],
             },
           ],
         },
