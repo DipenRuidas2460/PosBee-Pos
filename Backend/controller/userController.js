@@ -37,8 +37,8 @@ const getUserById = asyncHandler(async (req, res) => {
         "id",
         'fullName',
         "email",
-        "role",
         "phoneNumber",
+        "role",
         "photo",
       ],
     });

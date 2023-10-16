@@ -18,7 +18,8 @@ function Login({ showAlert }) {
           localStorage.setItem("userInfo", JSON.stringify(result.data.userdata));
           localStorage.setItem("token", result.data.token);
           showAlert("User Logged-In Successfully!", "success");
-          navigate("/master");
+          navigate("/new-chats");
+          window.location.reload()
         } else {
           navigate("/register");
           showAlert("You don't any account please register first!", "danger");

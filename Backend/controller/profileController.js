@@ -55,7 +55,7 @@ const addUser = asyncHandler(async (req, res) => {
     const mailData = {
       respMail: reqBody.email,
       subject: "Welcome",
-      text: `Hi, ${reqBody.name}. Welcome to Olx Clone Website`,
+      text: `Hi, ${reqBody.fullName}. Welcome to Olx Clone Website`,
     };
     await sendMail(mailData);
 
@@ -74,6 +74,7 @@ const addUser = asyncHandler(async (req, res) => {
         email,
         phoneNumber,
         role,
+        photo,
         token,
         message: "User successfully created!",
       });
@@ -126,8 +127,9 @@ const login = asyncHandler(async (req, res) => {
       userId: userDetails.id,
       fullName: userDetails.fullName,
       email: userDetails.email,
-      role: userDetails.role,
       phoneNumber: userDetails.phoneNumber,
+      role: userDetails.role,
+      photo:userDetails.photo,
       token: userDetails.token,
     };
 

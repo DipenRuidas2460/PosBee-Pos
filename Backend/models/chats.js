@@ -32,11 +32,6 @@ const Chat = sequelize.define(
       allowNull: false,
       trim: true,
     },
-
-    isGroupChat: {
-      type: DataTypes.BOOLEAN,
-      defaultValue: false,
-    },
     groupAdminId: {
       type: DataTypes.INTEGER,
       references: {

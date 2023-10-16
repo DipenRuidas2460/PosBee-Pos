@@ -24,7 +24,7 @@ function PasswordReset({ showAlert }) {
         .then((result) => {
           if (result.data.status === 200) {
             showAlert("Password Successfully Updated!", "success");
-            navigate("/mailsent");
+            navigate("/success-pass-change");
             localStorage.removeItem("token");
           } else {
             showAlert("Something went wrong!", "danger");
