@@ -47,7 +47,7 @@ const addUser = asyncHandler(async (req, res) => {
     const response = await userDetails.save();
 
     const token = jwt.sign(
-      { id: userDetails.id, userType: userDetails.role },
+      { id: userDetails.id, role: userDetails.role },
       secretKey,
       { expiresIn }
     );
@@ -60,15 +60,12 @@ const addUser = asyncHandler(async (req, res) => {
     await sendMail(mailData);
 
     if (response) {
-      const { id, fullName, email, phoneNumber, role } = response;
+      const { id, fullName, email, phoneNumber, role, photo } = response;
+
       res.header("Authorization", `Bearer ${token}`);
-      res.cookie("token", token, {
-        path: "/",
-        httpOnly: true,
-        expires: new Date(Date.now() + 1000 * 86400),
-      });
+
       return res.status(201).json({
-        status: true,
+        status: 200,
         id,
         fullName,
         email,
@@ -119,7 +116,7 @@ const login = asyncHandler(async (req, res) => {
     }
 
     const token = jwt.sign(
-      { id: userDetails.id, userType: userDetails.userType },
+      { id: userDetails.id, role: userDetails.role },
       secretKey,
       { expiresIn }
     );
@@ -129,16 +126,12 @@ const login = asyncHandler(async (req, res) => {
       email: userDetails.email,
       phoneNumber: userDetails.phoneNumber,
       role: userDetails.role,
-      photo:userDetails.photo,
-      token: userDetails.token,
+      photo: userDetails.photo,
+      token: token,
     };
 
     res.header("Authorization", `Bearer ${token}`);
-    res.cookie("token", token, {
-      path: "/",
-      httpOnly: true,
-      expires: new Date(Date.now() + 1000 * 86400),
-    });
+
     return res.status(200).json({
       status: "success",
       token,
@@ -155,11 +148,6 @@ const login = asyncHandler(async (req, res) => {
 
 const logOut = asyncHandler(async (req, res) => {
   try {
-    res.cookie("token", "", {
-      path: "/",
-      httpOnly: true,
-      expires: new Date(0),
-    });
     return res.status(200).json({
       status: true,
       msg: "Successfully Logged Out!",
@@ -201,10 +189,7 @@ const forgetPass = asyncHandler(async (req, res) => {
     }
 
     const token = generateString(20);
-    await User.update(
-      { fpToken: token },
-      { where: { email: email } }
-    );
+    await User.update({ fpToken: token }, { where: { email: email } });
 
     const mailData = {
       respMail: email,

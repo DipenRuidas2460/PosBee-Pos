@@ -2,17 +2,25 @@ import React, { useRef } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import usePasswordToggle from "../../hook/usePasswordToggle";
+import { useToast } from "@chakra-ui/react";
 
-function PasswordReset({ showAlert }) {
+function PasswordReset() {
   const [passwordInputType, ToggleIcon] = usePasswordToggle();
   const [passwordInputType1, ToggleIcon1] = usePasswordToggle();
   const emailForgotPass = useRef();
   const emailForgotPass1 = useRef();
   const navigate = useNavigate();
+  const toast = useToast()
 
   const handleForgotPass = () => {
     if (emailForgotPass.current.value !== emailForgotPass1.current.value) {
-      showAlert("Password and Confirm Password not matched!", "danger");
+      toast({
+        title: "Password and Confirm Password not matched!",
+        status: "warning",
+        duration: 3000,
+        isClosable: true,
+        position: "top-right",
+      });
     } else {
       const mailInfo = {
         password: emailForgotPass.current.value,
@@ -23,15 +31,33 @@ function PasswordReset({ showAlert }) {
         .post(`${host}/profile/resetpass`, mailInfo)
         .then((result) => {
           if (result.data.status === 200) {
-            showAlert("Password Successfully Updated!", "success");
+            toast({
+              title: "Password Successfully Updated!",
+              status: "success",
+              duration: 3000,
+              isClosable: true,
+              position: "top-right",
+            });
             navigate("/success-pass-change");
             localStorage.removeItem("token");
           } else {
-            showAlert("Something went wrong!", "danger");
+            toast({
+              title: "Something went wrong!",
+              status: "warning",
+              duration: 3000,
+              isClosable: true,
+              position: "top-right",
+            });
           }
         })
         .catch((err) => {
-          showAlert("Password reset link is wrong or expired!", "danger");
+          toast({
+            title: "Password reset link is wrong or expired!",
+            status: "warning",
+            duration: 3000,
+            isClosable: true,
+            position: "top-right",
+          });
         });
     }
   };

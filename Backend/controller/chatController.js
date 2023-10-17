@@ -2,26 +2,35 @@ const asyncHandler = require("express-async-handler");
 const User = require("../models/users");
 const Chat = require("../models/chats");
 const Message = require("../models/messages");
-const { Op } = require("sequelize");
+// const { Op } = require("sequelize");
 
 const accessChat = asyncHandler(async (req, res) => {
   try {
-    const { groupAdminId } = req.body;
+    const { userId } = req.body;
 
-    if (!groupAdminId) {
+    if (!userId) {
       return res.status(400).send({
         status: false,
-        message: "groupAdminId param not sent with request",
+        message: "userId not sent with request body!",
       });
     }
 
     const isChat = await Chat.findAll({
       where: {
-        isGroupChat: true,
-        [Op.and]: [{ groupAdminId: req.user.id }],
+        chatSenderId: req.user.id,
+        userId: userId,
       },
       include: [
-        { model: User, as: "users", attributes: { exclude: ["password"] } },
+        {
+          model: User,
+          as: "chatsender",
+          attributes: ["fullName", "email", "photo"],
+        },
+        {
+          model: User,
+          as: "receive",
+          attributes: ["fullName", "email", "photo"],
+        },
         {
           model: Message,
           as: "latestMessage",
@@ -34,20 +43,25 @@ const accessChat = asyncHandler(async (req, res) => {
     } else {
       const chatData = {
         chatName: "sender",
-        isGroupChat: false,
-        groupAdminId: groupAdminId,
+        chatSenderId: req.user.id,
+        userId,
       };
 
-      const createdChat = await Chat.create(chatData, {
-        include: [
-          { model: User, as: "users", attributes: { exclude: ["password"] } },
-        ],
-      });
+      const createdChat = await Chat.create(chatData);
 
       const fullChat = await Chat.findOne({
         where: { id: createdChat.id },
         include: [
-          { model: User, as: "users", attributes: { exclude: ["password"] } },
+          {
+            model: User,
+            as: "chatsender",
+            attributes: ["fullName", "email", "photo"],
+          },
+          {
+            model: User,
+            as: "receive",
+            attributes: ["fullName", "email", "photo"],
+          },
           {
             model: Message,
             as: "latestMessage",
@@ -73,10 +87,20 @@ const fetchChats = async (req, res) => {
   try {
     const results = await Chat.findAll({
       where: {
-        groupAdminId: req.user.id,
+        chatSenderId: req.user.id,
       },
       include: [
-        { model: User, as: "users", attributes: { exclude: ["password"] } },
+        {
+          model: User,
+          as: "chatsender",
+          attributes: { exclude: ["password"] },
+        },
+
+        {
+          model: User,
+          as: "receive",
+          attributes: ["fullName", "email", "photo"],
+        },
 
         {
           model: Message,

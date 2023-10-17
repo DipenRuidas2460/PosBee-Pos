@@ -3,22 +3,6 @@ const sequelize = require("../config/dbConfig");
 const User = require("./users");
 const Message = require("./messages");
 
-sequelize.define(
-  "UserChats",
-  {
-    id: {
-      type: DataTypes.INTEGER,
-      primaryKey: true,
-      autoIncrement: true,
-      allowNull: false,
-    },
-  },
-  {
-    tableName: "UserChats",
-    timestamps: true,
-  }
-);
-
 const Chat = sequelize.define(
   "Chat",
   {
@@ -32,12 +16,17 @@ const Chat = sequelize.define(
       allowNull: false,
       trim: true,
     },
-    groupAdminId: {
+    chatSenderId: {
       type: DataTypes.INTEGER,
+      allowNull: false,
       references: {
-        model: "User",
+        model: User,
         key: "id",
       },
+    },
+    userId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
     },
     latestMessageId: {
       type: DataTypes.INTEGER,
@@ -57,16 +46,13 @@ const Chat = sequelize.define(
   await Chat.sync({ force: false });
 })();
 
-Chat.belongsTo(User, { foreignKey: "groupAdminId", as: "users" });
+
+Chat.belongsTo(User, { foreignKey: "chatSenderId", as: "chatsender" });
+Chat.belongsTo(User, { foreignKey: "userId", as: "receive" });
 
 Chat.belongsTo(Message, {
   foreignKey: "latestMessageId",
   as: "latestMessage",
-});
-
-Chat.belongsToMany(User, {
-  through: "UserChats",
-  foreignKey: "groupAdminId",
 });
 
 Message.belongsTo(Chat, { foreignKey: "chatId" });

@@ -5,7 +5,7 @@ import Footer from "../partials/Footer";
 import Dashboard from "../modules/Dashboard";
 import NotFound from "../partials/404";
 
-function Master({ token, showAlert }) {
+function Master({ token}) {
   return (
     <div>
       {token ? (

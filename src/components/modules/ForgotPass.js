@@ -1,10 +1,12 @@
-import React, { useRef} from "react";
+import React, { useRef } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { useToast } from "@chakra-ui/react";
 
-function ForgotPass({ showAlert }) {
+function ForgotPass() {
   const emailForgotPass = useRef();
   const navigate = useNavigate();
+  const toast = useToast();
 
   const handleForgotPass = () => {
     const mailInfo = { email: emailForgotPass.current.value };
@@ -14,15 +16,24 @@ function ForgotPass({ showAlert }) {
       .then((result) => {
         if (result.data.status === "success") {
           localStorage.setItem("token", result.data.token);
-          showAlert(
-            "Link will be sent to your email for update password!",
-            "success"
-          );
+          toast({
+            title: "Link will be sent to your email for update password!",
+            status: "success",
+            duration: 3000,
+            isClosable: true,
+            position: "top-right",
+          });
           navigate("/mailsent");
         }
       })
       .catch((err) => {
-        showAlert("You don't any account please register first!", "danger");
+        toast({
+          title: "You don't any account please register first!",
+          status: "warning",
+          duration: 3000,
+          isClosable: true,
+          position: "top-right",
+        });
       });
   };
 

@@ -2,22 +2,6 @@ const { DataTypes } = require("sequelize");
 const sequelize = require("../config/dbConfig");
 const User = require("./users");
 
-sequelize.define(
-  "MessageReadBy",
-  {
-    id: {
-      type: DataTypes.INTEGER,
-      primaryKey: true,
-      autoIncrement: true,
-      allowNull: false,
-    },
-  },
-  {
-    tableName: "MessageReadBy",
-    timestamps: true,
-  }
-);
-
 const Message = sequelize.define(
   "Message",
   {
@@ -51,12 +35,5 @@ const Message = sequelize.define(
 })();
 
 Message.belongsTo(User, { foreignKey: "senderId", as: "sender" });
-
-Message.belongsToMany(User, {
-  through: "MessageReadBy",
-  foreignKey: "senderId",
-  as: "readBy",
-});
-
 
 module.exports = Message;

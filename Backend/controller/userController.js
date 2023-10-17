@@ -2,6 +2,7 @@ const { encryptPassword } = require("../helpers/main");
 const User = require("../models/users");
 const { checkPassword } = require("../helpers/main");
 const asyncHandler = require("express-async-handler");
+const { Op } = require("sequelize");
 
 const updateUser = asyncHandler(async (req, res) => {
   try {
@@ -18,8 +19,7 @@ const updateUser = asyncHandler(async (req, res) => {
     return res.status(201).json({
       status: response[0] === 0 ? 404 : 200,
       data: response,
-      message:
-        response[0] === 0 ? "Nothing updated" : "Successfully Updated!",
+      message: response[0] === 0 ? "Nothing updated" : "Successfully Updated!",
     });
   } catch (error) {
     console.log(error.message);
@@ -33,14 +33,7 @@ const getUserById = asyncHandler(async (req, res) => {
   try {
     const response = await User.findOne({
       where: { id: req.user.id },
-      attributes: [
-        "id",
-        'fullName',
-        "email",
-        "phoneNumber",
-        "role",
-        "photo",
-      ],
+      attributes: ["id", "fullName", "email", "phoneNumber", "role", "photo"],
     });
 
     return res.status(200).json({
@@ -58,9 +51,23 @@ const getUserById = asyncHandler(async (req, res) => {
   }
 });
 
-const getAllUsers = async (req, res) => {
+const getAllUsers = asyncHandler(async (req, res) => {
   try {
-    const response = await User.findAll({ raw: true });
+    const keyword = req.query.search
+      ? {
+          [Op.or]: [
+            { fullName: { [Op.like]: `%${req.query.search}%` } },
+            { email: { [Op.like]: `%${req.query.search}%` } },
+          ],
+        }
+      : {};
+
+    const response = await User.findAll({
+      where: {
+        ...keyword,
+        id: { [Op.not]: req.user.id },
+      },
+    });
 
     return res.status(200).json({
       status: "success",
@@ -69,11 +76,13 @@ const getAllUsers = async (req, res) => {
     });
   } catch (error) {
     console.log(error.message);
-    return res
-      .status(500)
-      .json({ status: 500, message: "Something went wrong" });
+    return res.status(500).json({
+      status: 500,
+      message: "Something went wrong",
+      messageInfo: error,
+    });
   }
-};
+});
 
 const updatePassword = asyncHandler(async (req, res) => {
   try {
@@ -124,5 +133,5 @@ module.exports = {
   updateUser,
   getUserById,
   updatePassword,
-  getAllUsers
+  getAllUsers,
 };

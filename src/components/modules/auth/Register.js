@@ -2,8 +2,9 @@ import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import usePasswordToggle from "../../../hook/usePasswordToggle";
+import { useToast } from "@chakra-ui/react";
 
-function Register({ showAlert }) {
+function Register() {
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
@@ -17,6 +18,7 @@ function Register({ showAlert }) {
   const [passwordInputType1, ToggleIcon1] = usePasswordToggle();
 
   const navigate = useNavigate();
+  const toast = useToast()
   const host = `http://localhost:3010`;
 
   const handleChange = (e) => {
@@ -30,34 +32,55 @@ function Register({ showAlert }) {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (formData.password !== formData.confirmPassword) {
-      showAlert("Password and Confirm Password not matched!", "danger");
+      toast({
+        title: "Password and Confirm Password not matched!",
+        status: "warning",
+        duration: 3000,
+        isClosable: true,
+        position: "top-right",
+      });
     } else {
       axios
         .post(`${host}/profile/register`, formData)
         .then((res) => {
-          if (res.status) {
+          if (res.data.status === 200) {
             localStorage.setItem("token", res.token);
-            showAlert("Account Created Sucessfully!", "success");
+            toast({
+              title: "Account Created Sucessfully!",
+              status: "success",
+              duration: 3000,
+              isClosable: true,
+              position: "top-right",
+            });
             navigate("/");
-          } else if (res.status === "email conflict") {
-            navigate("/register");
-            showAlert("Email is already present!", "danger");
-          } else if (res.status === "phone conflict") {
-            navigate("/register");
-            showAlert("Phone Number is already present!", "danger");
-          }
+          } 
         })
         .catch((err) => {
           if (err.response.data.status === "email conflict") {
-            showAlert("Email is already present!", "danger");
+            toast({
+              title: "Email is already present!",
+              status: "warning",
+              duration: 3000,
+              isClosable: true,
+              position: "top-right",
+            });
           } else if (err.response.data.status === "phone conflict") {
-            showAlert("Phone Number is already present!", "danger");
+            toast({
+              title: "Phone Number is already present!",
+              status: "warning",
+              duration: 3000,
+              isClosable: true,
+              position: "top-right",
+            });
           } else {
             console.log(err.message);
-            showAlert(
-              "Something Went Wrong (Please Select Prefix or Language)",
-              "danger"
-            );
+            toast({
+              title: "Something Went Wrong (Please Select Prefix or Language)!",
+              status: "warning",
+              duration: 3000,
+              isClosable: true,
+              position: "top-right",
+            });
           }
           navigate("/register");
         });

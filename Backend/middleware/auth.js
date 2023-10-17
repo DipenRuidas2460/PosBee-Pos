@@ -3,7 +3,6 @@ require("dotenv").config();
 
 const validateTokenMiddleware = (req, res, next) => {
   const secretKey = process.env.TOKEN_secret_key;
-  // let token = req.cookies.token;
 
   let token = req.headers.authorization;
 

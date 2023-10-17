@@ -2,11 +2,13 @@ import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import usePasswordToggle from "../../../hook/usePasswordToggle";
+import { useToast } from "@chakra-ui/react";
 
-function Login({ showAlert }) {
+function Login() {
   const [input, setInput] = useState({ email: "", password: "" });
   const [passwordInputType, ToggleIcon] = usePasswordToggle();
   const navigate = useNavigate();
+  const toast = useToast()
   const host = `http://localhost:3010`;
 
   const handleSubmit = (e) => {
@@ -17,20 +19,35 @@ function Login({ showAlert }) {
         if (result.data.status === "success") {
           localStorage.setItem("userInfo", JSON.stringify(result.data.userdata));
           localStorage.setItem("token", result.data.token);
-          showAlert("User Logged-In Successfully!", "success");
+          toast({
+            title: "User Logged-In Successfully!",
+            status: "success",
+            duration: 3000,
+            isClosable: true,
+            position: "top-right",
+          });
           navigate("/new-chats");
           window.location.reload()
         } else {
           navigate("/register");
-          showAlert("You don't any account please register first!", "danger");
+          toast({
+            title: "You don't any account please register first!",
+            status: "warning",
+            duration: 3000,
+            isClosable: true,
+            position: "top-right",
+          });
         }
       })
       .catch((err) => {
-        showAlert(
-          "Invalid Cradentials (either email or password is wrong)!",
-          "danger"
-        );
         console.log(err.message);
+        toast({
+          title: "Invalid Cradentials (either email or password is wrong)!",
+          status: "warning",
+          duration: 3000,
+          isClosable: true,
+          position: "top-right",
+        });
       });
   };
 
