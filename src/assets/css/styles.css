@@ -11736,3 +11736,10 @@ body {
   border-width: 5px;
   background-color: #fff;
 }
+
+.messages{
+  display: flex;
+  flex-direction: column;
+  overflow-y: scroll;
+  scrollbar-width: none;
+}

@@ -1,8 +1,7 @@
 const asyncHandler = require("express-async-handler");
 const User = require("../models/users");
-const Chat = require("../models/chats");
 const Message = require("../models/messages");
-// const { Op } = require("sequelize");
+const Chat = require("../models/Chats");
 
 const accessChat = asyncHandler(async (req, res) => {
   try {

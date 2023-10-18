@@ -4,21 +4,26 @@ import ChatBox from "../components/ChatBox";
 import MyChats from "../components/MyChats";
 import SideBarDrawer from "../components/miscellaneous/SideBarDrawer";
 import { useNavigate } from "react-router-dom";
+import { Box } from "@chakra-ui/react";
+import { useState } from "react";
 
 function ChatPage({ token }) {
+  const [fetchAgain, setFetchAgain] = useState(false);
   const { user } = ChatState();
   const navigate = useNavigate();
 
   return (
     <div style={{ width: "100%" }}>
       {token ? (
-        <div>
+        <Box>
           {user && <SideBarDrawer />}
           <div className="newChatPage">
-            {user && <MyChats />}
-            {user && <ChatBox />}
+            {user && <MyChats fetchAgain={fetchAgain} />}
+            {user && (
+              <ChatBox fetchAgain={fetchAgain} setFetchAgain={setFetchAgain} />
+            )}
           </div>
-        </div>
+        </Box>
       ) : (
         navigate("/404")
       )}

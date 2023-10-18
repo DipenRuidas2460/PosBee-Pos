@@ -103,16 +103,19 @@ function SideBarDrawer() {
         },
       };
 
-      const response = await axios.post(
-        `${host}/chat`,
-        { userId },
-        config
-      );
+      const response = await axios.post(`${host}/chat`, { userId }, config);
 
-      if (!chats?.find((c) => c.id === response.data.fullChat.id))
-        setChats([response.data.fullChat, ...chats]);
+      let allChats;
+      if (response.data.fullChat !== undefined) {
+        allChats = response.data.fullChat;
+      } else {
+        allChats = response.data.isChat;
+      }
 
-      setSelectedChat(response.data.fullChat);
+      if (!chats?.find((c) => c?.id === allChats.id))
+        setChats([allChats, ...chats]);
+
+      setSelectedChat(allChats);
       setLoadingChat(false);
       onClose();
     } catch (err) {

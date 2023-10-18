@@ -1,37 +1,7 @@
 const asyncHandler = require("express-async-handler");
 const User = require("../models/users");
-const Chat = require("../models/chats");
 const Message = require("../models/messages");
-
-const allMessages = asyncHandler(async (req, res) => {
-  try {
-    const messages = await Message.findAll({
-      where: { chatId: req.params.chatId },
-      include: [
-        {
-          model: Chat,
-          include: [
-            {
-              model: User,
-              as: "chatsender",
-              attributes: ["fullName", "photo", "email"],
-            },
-            {
-              model: User,
-              as: "receive",
-              attributes: ["fullName", "photo", "email"],
-            },
-          ],
-        },
-      ],
-    });
-
-    res.json(messages);
-  } catch (error) {
-    console.error(error);
-    res.status(error.status || 500).send(error.message);
-  }
-});
+const Chat = require("../models/Chats");
 
 const sendMessage = asyncHandler(async (req, res) => {
   try {
@@ -59,14 +29,21 @@ const sendMessage = asyncHandler(async (req, res) => {
             {
               model: User,
               as: "chatsender",
-              attributes: ["fullName", "photo", "email"],
+              attributes: ["id", "fullName", "photo", "email"],
             },
             {
               model: User,
               as: "receive",
-              attributes: ["fullName", "photo", "email"],
+              attributes: ["id", "fullName", "photo", "email"],
             },
           ],
+        },
+        {
+          model: User,
+          as: "sender",
+          attributes: {
+            exclude: ["password", "fpToken", "updatedAt", "createdAt", "role"],
+          },
         },
       ],
     });
@@ -77,6 +54,43 @@ const sendMessage = asyncHandler(async (req, res) => {
     );
 
     res.json(populatedMessage);
+  } catch (error) {
+    console.error(error);
+    res.status(error.status || 500).send(error.message);
+  }
+});
+
+const allMessages = asyncHandler(async (req, res) => {
+  try {
+    const messages = await Message.findAll({
+      where: { chatId: req.params.chatId },
+      include: [
+        {
+          model: Chat,
+          include: [
+            {
+              model: User,
+              as: "chatsender",
+              attributes: ["id", "fullName", "photo", "email"],
+            },
+            {
+              model: User,
+              as: "receive",
+              attributes: ["id", "fullName", "photo", "email"],
+            },
+          ],
+        },
+        {
+          model: User,
+          as: "sender",
+          attributes: {
+            exclude: ["password", "fpToken", "updatedAt", "createdAt", "role"],
+          },
+        },
+      ],
+    });
+
+    res.json(messages);
   } catch (error) {
     console.error(error);
     res.status(error.status || 500).send(error.message);
