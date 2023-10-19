@@ -1,9 +1,9 @@
 export const getSender = (loggedUser, users) => {
-  return users[0].id === loggedUser.id ? users[0].fullName : users[1].fullName;
+  return users[0]?.id === loggedUser?.id ? users[0].fullName : users[1].fullName;
 };
 
 export const getSenderFull = (loggedUser, users) => {
-  return users[0].id === loggedUser.id ? users[0] : users[1];
+  return users[0]?.id === loggedUser?.id ? users[0] : users[1];
 };
 
 export const isSameSender = (messages, m, i, userId) => {

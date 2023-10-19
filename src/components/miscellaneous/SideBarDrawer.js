@@ -40,8 +40,8 @@ function SideBarDrawer() {
     setSelectedChat,
     chats,
     setChats,
-    notification,
-    setNotification,
+    // notification,
+    // setNotification,
   } = ChatState();
   const navigate = useNavigate();
   const toast = useToast();
@@ -124,7 +124,7 @@ function SideBarDrawer() {
         title: "Error Occured!",
         description: err.message,
         status: "error",
-        duration: 5000,
+        duration: 3000,
         isClosable: true,
         position: "top-right",
       });
@@ -187,11 +187,11 @@ function SideBarDrawer() {
             {loading ? (
               <ChatLoading />
             ) : (
-              searchResult?.map((user) => (
+              searchResult?.map((u) => (
                 <UserListItems
-                  key={user.id}
-                  user={user}
-                  handleFunction={() => accessChat(user.id)}
+                  key={u.id}
+                  u={u}
+                  handleFunction={() => accessChat(u.id)}
                 />
               ))
             )}

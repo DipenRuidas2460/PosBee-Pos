@@ -21,8 +21,6 @@ function MyChats({ fetchAgain }) {
 
       const response = await axios.get(`${host}/chat`, config);
 
-      // console.log("allChats:--", response.data.result);
-
       setChats(response.data.result);
     } catch (err) {
       console.log(err);
@@ -91,7 +89,7 @@ function MyChats({ fetchAgain }) {
                 key={chat.id}
               >
                 <Text>
-                  {getSender(loggedUser, [chat.chatsender, chat.receive])}
+                  {getSender(loggedUser, [chat?.chatsender, chat?.receive])}
                 </Text>
               </Box>
             ))}

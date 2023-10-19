@@ -2,6 +2,7 @@ const asyncHandler = require("express-async-handler");
 const User = require("../models/users");
 const Message = require("../models/messages");
 const Chat = require("../models/Chats");
+const { Op } = require("sequelize");
 
 const accessChat = asyncHandler(async (req, res) => {
   try {
@@ -16,23 +17,28 @@ const accessChat = asyncHandler(async (req, res) => {
 
     const isChat = await Chat.findAll({
       where: {
-        chatSenderId: req.user.id,
-        userId: userId,
+        allUsers: {
+          [Op.and]: {
+            [Op.like]: `%${req.user.id}%`,
+            [Op.like]: `%${userId}%`,
+          },
+        },
       },
       include: [
         {
           model: User,
           as: "chatsender",
-          attributes: ["fullName", "email", "photo"],
+          attributes: ["id", "fullName", "email", "photo"],
         },
         {
           model: User,
           as: "receive",
-          attributes: ["fullName", "email", "photo"],
+          attributes: ["id", "fullName", "email", "photo"],
         },
         {
           model: Message,
           as: "latestMessage",
+          attributes: ["id", "content", "senderId", "chatId"],
         },
       ],
     });
@@ -44,6 +50,7 @@ const accessChat = asyncHandler(async (req, res) => {
         chatName: "sender",
         chatSenderId: req.user.id,
         userId,
+        allUsers: `${req.user.id};${userId}`,
       };
 
       const createdChat = await Chat.create(chatData);
@@ -54,16 +61,17 @@ const accessChat = asyncHandler(async (req, res) => {
           {
             model: User,
             as: "chatsender",
-            attributes: ["fullName", "email", "photo"],
+            attributes: ["id", "fullName", "email", "photo"],
           },
           {
             model: User,
             as: "receive",
-            attributes: ["fullName", "email", "photo"],
+            attributes: ["id", "fullName", "email", "photo"],
           },
           {
             model: Message,
             as: "latestMessage",
+            attributes: ["id", "content", "senderId", "chatId"],
           },
         ],
       });
@@ -86,7 +94,9 @@ const fetchChats = async (req, res) => {
   try {
     const results = await Chat.findAll({
       where: {
-        chatSenderId: req.user.id,
+        allUsers: {
+          [Op.like]: `%${req.user.id}%`,
+        },
       },
       include: [
         {
@@ -98,12 +108,13 @@ const fetchChats = async (req, res) => {
         {
           model: User,
           as: "receive",
-          attributes: ["fullName", "email", "photo"],
+          attributes: ["id", "fullName", "email", "photo"],
         },
 
         {
           model: Message,
           as: "latestMessage",
+          attributes: ["id", "content", "senderId", "chatId"],
         },
       ],
       order: [["updatedAt", "DESC"]],

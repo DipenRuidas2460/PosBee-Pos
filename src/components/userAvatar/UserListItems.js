@@ -1,7 +1,7 @@
 import { Avatar, Box, Text } from "@chakra-ui/react";
 import React from "react";
 
-function UserListItems({ user, handleFunction }) {
+function UserListItems({ u, handleFunction }) {
   return (
     <Box
       onClick={handleFunction}
@@ -24,14 +24,14 @@ function UserListItems({ user, handleFunction }) {
         mr={2}
         size="sm"
         cursor="pointer"
-        name={user.fullName}
-        src={user.photo}
+        name={u.fullName}
+        src={u.photo}
       />
       <Box>
-        <Text>{user.fullName}</Text>
+        <Text>{u.fullName}</Text>
         <Text fontSize="xs">
           <b>Email : </b>
-          {user.email}
+          {u.email}
         </Text>
       </Box>
     </Box>

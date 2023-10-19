@@ -24,6 +24,16 @@ const Chat = sequelize.define(
         key: "id",
       },
     },
+    allUsers: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      get() {
+        return this.getDataValue("allUsers")?.split(";");
+      },
+      set(val) {
+        this.setDataValue("allUsers", val?.join(";"));
+      },
+    },
     userId: {
       type: DataTypes.INTEGER,
       allowNull: false,
@@ -45,7 +55,6 @@ const Chat = sequelize.define(
 (async () => {
   await Chat.sync({ force: false });
 })();
-
 
 Chat.belongsTo(User, { foreignKey: "chatSenderId", as: "chatsender" });
 Chat.belongsTo(User, { foreignKey: "userId", as: "receive" });
