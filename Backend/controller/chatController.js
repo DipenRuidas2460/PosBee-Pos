@@ -17,12 +17,20 @@ const accessChat = asyncHandler(async (req, res) => {
 
     const isChat = await Chat.findAll({
       where: {
-        allUsers: {
-          [Op.and]: {
-            [Op.like]: `%${req.user.id}%`,
-            [Op.like]: `%${userId}%`,
+        [Op.and]: [
+          {
+            [Op.or]: [
+              { "$chatsender.id$": req.user.id },
+              { "$receive.id$": req.user.id },
+            ],
           },
-        },
+          {
+            [Op.or]: [
+              { "$chatsender.id$": userId },
+              { "$receive.id$": userId },
+            ],
+          },
+        ],
       },
       include: [
         {
@@ -37,20 +45,25 @@ const accessChat = asyncHandler(async (req, res) => {
         },
         {
           model: Message,
-          as: "latestMessage",
-          attributes: ["id", "content", "senderId", "chatId"],
+          as: "msg",
         },
       ],
     });
 
     if (isChat.length > 0) {
-      return res.status(200).json({ isChat: isChat[0] });
+      let loggedUserId = req.user.id 
+      if (loggedUserId !== isChat[0].chatSenderId) {
+        isChat[0].chatSenderId = isChat[0].userId;
+        isChat[0].userId = isChat[0].loggedUserId;
+        isChat[0].save();
+        return res.status(200).json({ isChat: isChat[0] });
+      } else {
+        return res.status(200).json({ isChat: isChat[0] });
+      }
     } else {
       const chatData = {
-        chatName: "sender",
         chatSenderId: req.user.id,
-        userId,
-        allUsers: `${req.user.id};${userId}`,
+        userId: userId,
       };
 
       const createdChat = await Chat.create(chatData);
@@ -70,8 +83,7 @@ const accessChat = asyncHandler(async (req, res) => {
           },
           {
             model: Message,
-            as: "latestMessage",
-            attributes: ["id", "content", "senderId", "chatId"],
+            as: "msg",
           },
         ],
       });
@@ -94,9 +106,10 @@ const fetchChats = async (req, res) => {
   try {
     const results = await Chat.findAll({
       where: {
-        allUsers: {
-          [Op.like]: `%${req.user.id}%`,
-        },
+        [Op.or]: [
+          { "$chatsender.id$": req.user.id },
+          { "$receive.id$": req.user.id },
+        ],
       },
       include: [
         {
@@ -113,11 +126,10 @@ const fetchChats = async (req, res) => {
 
         {
           model: Message,
-          as: "latestMessage",
-          attributes: ["id", "content", "senderId", "chatId"],
+          as: "msg",
         },
       ],
-      order: [["updatedAt", "DESC"]],
+      order: [["createdAt", "DESC"]],
     });
 
     return res.status(200).send({ status: true, result: results });

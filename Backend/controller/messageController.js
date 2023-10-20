@@ -5,9 +5,9 @@ const Chat = require("../models/Chats");
 
 const sendMessage = asyncHandler(async (req, res) => {
   try {
-    const { content, chatId } = req.body;
+    const { content, chatId} = req.body;
 
-    if (!content || !chatId) {
+    if (!content || !chatId ) {
       return res
         .status(400)
         .send({ status: false, message: "Invalid data passed into request" });
@@ -25,18 +25,7 @@ const sendMessage = asyncHandler(async (req, res) => {
       include: [
         {
           model: Chat,
-          include: [
-            {
-              model: User,
-              as: "chatsender",
-              attributes: ["id", "fullName", "photo", "email"],
-            },
-            {
-              model: User,
-              as: "receive",
-              attributes: ["id", "fullName", "photo", "email"],
-            },
-          ],
+          as: "msg",
         },
         {
           model: User,
@@ -49,7 +38,7 @@ const sendMessage = asyncHandler(async (req, res) => {
     });
 
     await Chat.update(
-      { latestMessageId: message.id },
+      { createdAt: message.createdAt },
       { where: { id: chatId } }
     );
 
@@ -67,18 +56,7 @@ const allMessages = asyncHandler(async (req, res) => {
       include: [
         {
           model: Chat,
-          include: [
-            {
-              model: User,
-              as: "chatsender",
-              attributes: ["id", "fullName", "photo", "email"],
-            },
-            {
-              model: User,
-              as: "receive",
-              attributes: ["id", "fullName", "photo", "email"],
-            },
-          ],
+          as: "msg",
         },
         {
           model: User,

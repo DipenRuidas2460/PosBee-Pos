@@ -43,8 +43,6 @@ function SingleChat({ fetchAgain, setFetchAgain }) {
         config
       );
 
-      console.log("fetch-messages:--", data);
-
       setMessages(data);
       setloading(false);
     } catch (err) {
@@ -101,7 +99,6 @@ function SingleChat({ fetchAgain, setFetchAgain }) {
     }
   };
 
-
   const typingHandler = (e) => {
     setNewMessage(e.target.value);
   };
@@ -126,10 +123,15 @@ function SingleChat({ fetchAgain, setFetchAgain }) {
               onClick={() => setSelectedChat("")}
             />
             <>
-              {getSender(user, [selectedChat?.chatsender, selectedChat?.receive])}
+              {getSender(user, [
+                selectedChat?.chatsender,
+                selectedChat?.receive,
+              ])}
               <ProfileMenu
-                user={getSenderFull(user, [selectedChat.chatsender,
-                  selectedChat.receive])}
+                user={getSenderFull(user, [
+                  selectedChat.chatsender,
+                  selectedChat.receive,
+                ])}
               />
             </>
           </Text>
