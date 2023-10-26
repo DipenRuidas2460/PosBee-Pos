@@ -7,7 +7,6 @@ function HomePage({ showAlert }) {
 
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("userInfo"));
-
     if (!user) navigate("/404");
   }, [navigate]);
 

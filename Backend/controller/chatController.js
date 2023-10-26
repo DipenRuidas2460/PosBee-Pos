@@ -51,15 +51,17 @@ const accessChat = asyncHandler(async (req, res) => {
     });
 
     if (isChat.length > 0) {
-      let loggedUserId = req.user.id 
+      let loggedUserId = req.user.id;
       if (loggedUserId !== isChat[0].chatSenderId) {
-        isChat[0].chatSenderId = isChat[0].userId;
-        isChat[0].userId = isChat[0].loggedUserId;
-        isChat[0].save();
-        return res.status(200).json({ isChat: isChat[0] });
-      } else {
-        return res.status(200).json({ isChat: isChat[0] });
+        isChat[0].chatSenderId = loggedUserId;
+        isChat[0].userId = userId;
+        [isChat[0].chatsender, isChat[0].receive] = [
+          isChat[0].receive,
+          isChat[0].chatsender,
+        ];
+        await isChat[0].save();
       }
+      return res.status(200).json({ isChat: isChat[0] });
     } else {
       const chatData = {
         chatSenderId: req.user.id,
@@ -115,7 +117,7 @@ const fetchChats = async (req, res) => {
         {
           model: User,
           as: "chatsender",
-          attributes: { exclude: ["password"] },
+          attributes: { exclude: ["password", "fpToken", "role", "updatedAt"] },
         },
 
         {
@@ -131,6 +133,20 @@ const fetchChats = async (req, res) => {
       ],
       order: [["createdAt", "DESC"]],
     });
+
+    let loggedUserId = req.user.id;
+    if (loggedUserId !== results[0].chatSenderId) {
+      [results[0].chatSenderId, results[0].userId] = [
+        results[0].userId,
+        results[0].chatSenderId,
+      ];
+      [results[0].chatsender, results[0].receive] = [
+        results[0].receive,
+        results[0].chatsender,
+      ];
+    }
+
+    await results[0].save();
 
     return res.status(200).send({ status: true, result: results });
   } catch (error) {
