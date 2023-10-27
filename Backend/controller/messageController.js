@@ -26,6 +26,18 @@ const sendMessage = asyncHandler(async (req, res) => {
         {
           model: Chat,
           as: "msg",
+          include: [
+            {
+              model: User,
+              as: "chatsender",
+              attributes: ["id", "fullName", "email", "photo"],
+            },
+            {
+              model: User,
+              as: "receive",
+              attributes: ["id", "fullName", "email", "photo"],
+            },
+          ],
         },
         {
           model: User,
@@ -41,11 +53,10 @@ const sendMessage = asyncHandler(async (req, res) => {
       { createdAt: message.createdAt },
       { where: { id: chatId } }
     );
-
     res.json(populatedMessage);
   } catch (error) {
     console.error(error);
-    res.status(error.status || 500).send(error.message);
+    return res.status(error.status || 500).send(error.message);
   }
 });
 
@@ -57,7 +68,18 @@ const allMessages = asyncHandler(async (req, res) => {
         {
           model: Chat,
           as: "msg",
-          attributes: ["createdAt"],
+          include: [
+            {
+              model: User,
+              as: "chatsender",
+              attributes: ["id", "fullName", "email", "photo"],
+            },
+            {
+              model: User,
+              as: "receive",
+              attributes: ["id", "fullName", "email", "photo"],
+            },
+          ],
         },
         {
           model: User,

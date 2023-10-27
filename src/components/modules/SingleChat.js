@@ -15,10 +15,9 @@ import ProfileMenu from "../miscellaneous/ProfileMenu";
 import axios from "axios";
 import ScrollableChat from "./ScrollableChat";
 import { io } from "socket.io-client";
-import Lottie from "react-lottie";
+import Lottie from "react-lottie-player";
 import animationData from "../../animation/typing.json";
 import { useRef } from "react";
-
 
 function SingleChat({ fetchAgain, setFetchAgain }) {
   const [messages, setMessages] = useState([]);
@@ -27,21 +26,12 @@ function SingleChat({ fetchAgain, setFetchAgain }) {
   const [socketConnected, setSocketConnected] = useState(false);
   const [typing, setTyping] = useState(false);
   const [istyping, setIsTyping] = useState(false);
+  const [selectedChatCompare, setSelectedChatCompare] = useState("")
 
-  const defaultOptions = {
-    loop: true,
-    autoplay: true,
-    animationData: animationData,
-    rendererSettings: {
-      preserveAspectRatio: "xMidYMid slice",
-    },
-  };
-
-  const { user, selectedChat, setSelectedChat } = ChatState();
+  const { user, selectedChat, setSelectedChat, notification, setNotification } = ChatState();
   const host = `http://localhost:3010`;
   const socket = useRef(null);
   const toast = useToast();
-  const selectedChatCompare = useRef(null)
 
   const fetchMessages = async () => {
     try {
@@ -117,7 +107,7 @@ function SingleChat({ fetchAgain, setFetchAgain }) {
   };
 
   useEffect(() => {
-    socket.current =  io(host);
+    socket.current = io(host);
     socket.current.emit("setup", user);
     socket.current.on("connected", () => setSocketConnected(true));
     socket.current.on("typing", () => setIsTyping(true));
@@ -127,20 +117,25 @@ function SingleChat({ fetchAgain, setFetchAgain }) {
 
   useEffect(() => {
     fetchMessages();
-    selectedChatCompare.current = selectedChat;
+    setSelectedChatCompare(selectedChat)
     // eslint-disable-next-line
   }, [selectedChat]);
 
   useEffect(() => {
-    socket.current.on("message recieved", (newMessageReceived)=>{
-      if (!selectedChatCompare.current || selectedChatCompare.current.id !== newMessageReceived.chatId) {
-        // get notification
+    socket.current.on("message recieved", (newMessageReceived) => {
+      if (
+        !selectedChatCompare ||
+        selectedChatCompare.id !== newMessageReceived.chatId
+      ) {
+          if (!notification.includes(newMessageReceived)) {
+            setNotification([newMessageReceived, ...notification])
+            setFetchAgain(!fetchAgain)
+          }
       } else {
-        setMessages([...messages, newMessageReceived])
+        setMessages([...messages, newMessageReceived]);
       }
-    })
-  })
-  
+    });
+  });
 
   const typingHandler = (e) => {
     setNewMessage(e.target.value);
@@ -168,6 +163,8 @@ function SingleChat({ fetchAgain, setFetchAgain }) {
       }
     }, timerLength);
   };
+
+  console.log("notification:--", notification)
 
   return (
     <>
@@ -230,9 +227,15 @@ function SingleChat({ fetchAgain, setFetchAgain }) {
               {istyping ? (
                 <div>
                   <Lottie
-                    options={defaultOptions}
-                    width={70}
-                    style={{ marginBottom: 15, marginLeft: 0 }}
+                    play
+                    loop
+                    animationData={animationData}
+                    style={{
+                      marginBottom: 15,
+                      marginLeft: 0,
+                      height: 100,
+                      width: 100,
+                    }}
                   />
                 </div>
               ) : (

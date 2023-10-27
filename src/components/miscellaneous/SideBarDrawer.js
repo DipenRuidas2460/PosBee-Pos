@@ -27,6 +27,9 @@ import ProfileMenu from "./ProfileMenu";
 import axios from "axios";
 import ChatLoading from "../modules/ChatLoading";
 import UserListItems from "../userAvatar/UserListItems";
+import { getSender } from "../../chatLogic/chatLogics";
+import NotificationBadge from "react-notification-badge";
+import { Effect } from "react-notification-badge";
 
 function SideBarDrawer() {
   const [search, setSearch] = useState("");
@@ -40,8 +43,8 @@ function SideBarDrawer() {
     setSelectedChat,
     chats,
     setChats,
-    // notification,
-    // setNotification,
+    notification,
+    setNotification,
   } = ChatState();
   const navigate = useNavigate();
   const toast = useToast();
@@ -146,8 +149,29 @@ function SideBarDrawer() {
         <div>
           <Menu>
             <MenuButton p={1}>
+              <NotificationBadge
+                count={notification.length}
+                effect={Effect.SCALE}
+              />
               <BellIcon fontSize="2xl" m={1} />
             </MenuButton>
+            <MenuList pl={4}>
+              {!notification.length && "No New Messages!"}
+              {notification.map((notif) => (
+                <MenuItem
+                  key={notif.id}
+                  onClick={() => {
+                    setSelectedChat(notif.msg);
+                    setNotification(notification.filter((n) => n !== notif));
+                  }}
+                >
+                  {`New Message from ${getSender(user, [
+                    notif.msg.chatsender,
+                    notif.msg.receive,
+                  ])}`}
+                </MenuItem>
+              ))}
+            </MenuList>
           </Menu>
 
           <Menu>
