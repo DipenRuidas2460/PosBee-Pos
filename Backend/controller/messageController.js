@@ -7,6 +7,8 @@ const sendMessage = asyncHandler(async (req, res) => {
   try {
     const { content, chatId } = req.body;
 
+    const loggedUserId = req.user.id;
+
     if (!content || !chatId) {
       return res
         .status(400)
@@ -16,10 +18,15 @@ const sendMessage = asyncHandler(async (req, res) => {
     const newMessage = {
       content: content,
       chatId: chatId,
-      senderId: req.user.id,
+      senderId: loggedUserId,
     };
 
     const message = await Message.create(newMessage);
+
+    await Chat.update(
+      { createdAt: message.createdAt },
+      { where: { id: chatId } }
+    );
 
     const populatedMessage = await Message.findByPk(message.id, {
       include: [
@@ -49,11 +56,15 @@ const sendMessage = asyncHandler(async (req, res) => {
       ],
     });
 
-    await Chat.update(
-      { createdAt: message.createdAt },
-      { where: { id: chatId } }
-    );
-    res.json(populatedMessage);
+    const messageSenderId = populatedMessage.msg.chatSenderId;
+
+    if (loggedUserId !== messageSenderId) {
+      populatedMessage.msg.userId = messageSenderId;
+      populatedMessage.msg.chatSenderId = loggedUserId;
+      await populatedMessage.save()
+    }
+    
+    return res.status(200).json(populatedMessage);
   } catch (error) {
     console.error(error);
     return res.status(error.status || 500).send(error.message);

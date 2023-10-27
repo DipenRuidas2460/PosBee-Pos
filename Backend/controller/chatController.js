@@ -66,7 +66,6 @@ const accessChat = asyncHandler(async (req, res) => {
       const chatData = {
         chatSenderId: req.user.id,
         userId: userId,
-        users: [`${req.user.id}`, `${userId}`],
       };
 
       const createdChat = await Chat.create(chatData);

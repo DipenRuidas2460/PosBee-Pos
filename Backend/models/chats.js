@@ -22,17 +22,6 @@ const Chat = sequelize.define(
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-    users: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      get() {
-        const value = this.getDataValue("users");
-        return value ? value.split(";") : [];
-      },
-      set(val) {
-        this.setDataValue("users", val.join(";"));
-      },
-    },
   },
   {
     tableName: "Chat",
