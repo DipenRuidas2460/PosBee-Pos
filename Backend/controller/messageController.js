@@ -61,9 +61,9 @@ const sendMessage = asyncHandler(async (req, res) => {
     if (loggedUserId !== messageSenderId) {
       populatedMessage.msg.userId = messageSenderId;
       populatedMessage.msg.chatSenderId = loggedUserId;
-      await populatedMessage.save()
+      await populatedMessage.save();
     }
-    
+
     return res.status(200).json(populatedMessage);
   } catch (error) {
     console.error(error);

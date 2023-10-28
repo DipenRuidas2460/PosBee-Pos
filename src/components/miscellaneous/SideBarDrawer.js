@@ -167,7 +167,9 @@ function SideBarDrawer() {
                 >
                   {`New Message from ${getSender(user, [
                     notif.msg.chatsender,
-                    notif.msg.receive,
+                    notif.msg.chatSenderId === notif.msg.receive.id
+                      ? notif.msg.receive
+                      : notif.msg.chatsender,
                   ])}`}
                 </MenuItem>
               ))}

@@ -73,17 +73,14 @@ io.on("connection", (socket) => {
       return console.log("Message Sender or chat sender not defined!");
     }
 
+    if (newMessageRecieved.msg.userId === newMessageRecieved.senderId) return;
+
+    socket
+      .in(newMessageRecieved.msg.chatSenderId)
+      .emit("message recieved", newMessageRecieved);
     socket
       .in(newMessageRecieved.msg.userId)
       .emit("message recieved", newMessageRecieved);
-
-    // newMessageRecieved.msg.users.forEach((ele) => {
-    //   const Id = parseInt(ele)
-    //   if (Id === newMessageRecieved.sender.id) {
-    //     return;
-    //   }
-    //   socket.in(Id).emit("message recieved", newMessageRecieved);
-    // });
   });
 
   socket.off("setup", (userData) => {
