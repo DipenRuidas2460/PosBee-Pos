@@ -90,6 +90,8 @@ function SingleChat({ fetchAgain, setFetchAgain }) {
           config
         );
 
+        console.log("data:-", data)
+
         socket.current.emit("new message", data);
         setMessages([...messages, data]);
       } catch (err) {

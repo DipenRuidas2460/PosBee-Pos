@@ -134,21 +134,21 @@ const fetchChats = async (req, res) => {
       order: [["createdAt", "DESC"]],
     });
 
-    let loggedUserId = req.user.id;
-    if (loggedUserId !== results[0].chatSenderId) {
-      [results[0].chatSenderId, results[0].userId] = [
-        results[0].userId,
-        results[0].chatSenderId,
-      ];
-      [results[0].chatsender, results[0].receive] = [
-        results[0].receive,
-        results[0].chatsender,
-      ];
+    if (results.length > 0) {
+      let loggedUserId = req.user.id;
+      if (loggedUserId !== results[0]?.chatSenderId) {
+        [results[0].chatSenderId, results[0].userId] = [
+          results[0].userId,
+          results[0].chatSenderId,
+        ];
+        [results[0].chatsender, results[0].receive] = [
+          results[0].receive,
+          results[0].chatsender,
+        ];
+      }
+      await results[0].save();
+      return res.status(200).send({ status: true, result: results });
     }
-
-    await results[0].save();
-
-    return res.status(200).send({ status: true, result: results });
   } catch (error) {
     console.error(error.message);
     res.status(400).send({ msg: error.message });
