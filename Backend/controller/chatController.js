@@ -55,13 +55,26 @@ const accessChat = asyncHandler(async (req, res) => {
       if (loggedUserId !== isChat[0].chatSenderId) {
         isChat[0].chatSenderId = loggedUserId;
         isChat[0].userId = userId;
+
         [isChat[0].chatsender, isChat[0].receive] = [
           isChat[0].receive,
           isChat[0].chatsender,
         ];
+
         await isChat[0].save();
       }
+
+      // if (loggedUserId !== isChat[0].chatsender.id) {
+      //   [isChat[0].chatsender, isChat[0].receive] = [
+      //     isChat[0].receive,
+      //     isChat[0].chatsender,
+      //   ];
+        
+      // }
+
+      
       return res.status(200).json({ isChat: isChat[0] });
+
     } else {
       const chatData = {
         chatSenderId: req.user.id,

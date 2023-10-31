@@ -63,7 +63,6 @@ const sendMessage = asyncHandler(async (req, res) => {
       populatedMessage.msg.chatSenderId = loggedUserId;
       await populatedMessage.save();
     }
-
     return res.status(200).json(populatedMessage);
   } catch (error) {
     console.error(error);
@@ -102,7 +101,16 @@ const allMessages = asyncHandler(async (req, res) => {
       ],
     });
 
-    res.json(messages);
+    for (let i = 0; i < messages.length; i++) {
+      const messageSenderId = messages[i].senderId;
+      if (messages[i].msg.chatSenderId !== messageSenderId) {
+        messages[i].msg.userId = messages[i].msg.chatSenderId;
+        messages[i].msg.chatSenderId = messageSenderId;
+        await messages[i].save();
+      }
+    }
+
+    return res.json(messages);
   } catch (error) {
     console.error(error);
     res.status(error.status || 500).send(error.message);

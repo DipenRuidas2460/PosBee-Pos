@@ -60,9 +60,12 @@ io.on("connection", (socket) => {
 
   socket.on("join chat", (room) => {
     socket.join(room);
+    socket.emit("room joined", room);
   });
 
-  socket.on("typing", (room) => socket.in(room).emit("typing"));
+  socket.on("typing", (room) => {
+    socket.in(room).emit("typing");
+  });
   socket.on("stop typing", (room) => socket.in(room).emit("stop typing"));
 
   socket.on("new message", (newMessageRecieved) => {
@@ -76,10 +79,7 @@ io.on("connection", (socket) => {
     if (newMessageRecieved.msg.userId === newMessageRecieved.senderId) return;
 
     socket
-      .in(newMessageRecieved.msg.chatSenderId)
-      .emit("message recieved", newMessageRecieved);
-    socket
-      .in(newMessageRecieved.msg.userId)
+      .in(newMessageRecieved.chatId)
       .emit("message recieved", newMessageRecieved);
   });
 

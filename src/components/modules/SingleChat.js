@@ -26,9 +26,9 @@ function SingleChat({ fetchAgain, setFetchAgain }) {
   const [socketConnected, setSocketConnected] = useState(false);
   const [typing, setTyping] = useState(false);
   const [istyping, setIsTyping] = useState(false);
-  const [selectedChatCompare, setSelectedChatCompare] = useState("")
+  // const [selectedChatCompare, setSelectedChatCompare] = useState("");
 
-  const { user, selectedChat, setSelectedChat, notification, setNotification } = ChatState();
+  const { user, selectedChat, setSelectedChat } = ChatState();
   const host = `http://localhost:3010`;
   const socket = useRef(null);
   const toast = useToast();
@@ -90,8 +90,6 @@ function SingleChat({ fetchAgain, setFetchAgain }) {
           config
         );
 
-        console.log("data:-", data)
-
         socket.current.emit("new message", data);
         setMessages([...messages, data]);
       } catch (err) {
@@ -119,23 +117,24 @@ function SingleChat({ fetchAgain, setFetchAgain }) {
 
   useEffect(() => {
     fetchMessages();
-    setSelectedChatCompare(selectedChat)
+    // setSelectedChatCompare(selectedChat);
     // eslint-disable-next-line
   }, [selectedChat]);
 
   useEffect(() => {
     socket.current.on("message recieved", (newMessageReceived) => {
-      if (
-        !selectedChatCompare ||
-        selectedChatCompare.id !== newMessageReceived.chatId
-      ) {
-          if (!notification.includes(newMessageReceived)) {
-            setNotification([newMessageReceived, ...notification])
-            setFetchAgain(!fetchAgain)
-          }
-      } else {
-        setMessages([...messages, newMessageReceived]);
-      }
+      setMessages([...messages, newMessageReceived]);
+      // if (
+      //   !selectedChatCompare ||
+      //   selectedChatCompare.id !== newMessageReceived.chatId
+      // ) {
+      //   if (!notification.includes(newMessageReceived)) {
+      //     setNotification([newMessageReceived, ...notification]);
+      //     setFetchAgain(!fetchAgain);
+      //   }
+      // } else {
+      //   setMessages([...messages, newMessageReceived]);
+      // }
     });
   });
 
